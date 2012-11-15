@@ -1,0 +1,7 @@
+*~
+depend
+*.o
+*.so
+.project
+.cproject
+build

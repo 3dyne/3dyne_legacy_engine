@@ -1,0 +1,347 @@
+#########################################################################
+# this is the native makefile for UNIX. for native compilation on windows
+# you should use something like ms vc. we do not compile native on win32
+# by now
+# it also allows cross compiling for win32 on a UNIX/LINUX box.
+#########################################################################
+
+# variables:
+# target  -- target
+# debug   -- set true of false
+
+# supported targets:
+# linux
+# win32 (Xmingw32 cross compiled)
+# irix
+
+debug = true
+
+ifeq ($(target), )
+target := $(shell uname | tr '[A-Z]' '[a-z]')
+endif
+
+ 
+build_date = `date`
+build_host = `uname -n`
+build_version = 0.2
+build_type = tech demo
+build_comment = If you have it be glad!
+
+ifeq ($(target), linux)
+TFLAGS	=
+CC 	= gcc 
+# CC = gcc -V2.7.2.3
+CPP = cpp
+
+#proj_libdir = /mnt/project/lib/linux.i386
+proj_libdir = /usr/lib
+
+LIBS = -L/usr/X11/lib -ldl -lm -lX11  -lXxf86dga -lXxf86vm -lXext -pthread -ljpeg -lSDL -lbz2
+#$(proj_libdir)/libSDL.a $(proj_libdir)/libesd.a $(proj_libdir)/libbz2.a $(proj_libdir)/libjpeg.a 
+
+#/usr/lib/libmikmod.a
+CFLAGS = -Wall -pipe
+INCLUDES = -I/usr/local/include
+DEFINES = -D linux_i386
+
+hostsystem	= linux.i386
+SS_OBJ	= $(hostsystem)/r_glx.o \
+	$(hostsystem)/i_x11.o \
+	$(hostsystem)/glx_service.o
+
+ifeq ($(debug), true)
+OPTIMIZE = -g -pg -O2
+SYMLINK = ln -s -n -f linux.i386.debug linux.i386
+
+else
+OPTIMIZE =  -O2 -fomit-frame-pointer -fexpensive-optimizations
+#OPTIMIZE =  -O2
+SYMLINK = ln -s -n -f linux.i386.release linux.i386
+#OPTIMIZE = -g
+endif
+CFLAGS += $(OPTIMIZE)
+endif
+# endof linux
+
+
+ifeq ($(target), irix)
+TFLAGS	=
+CC 	= cc
+#CC	= gcc
+LIBS = -L/usr/X11/lib -ldl -lm -lc -lX11 -lXext -lGLU
+CFLAGS = -O2 -Xansi -Xcpluscomm
+#CFLAGS	= -O2 -L/usr/lib
+INCLUDES = -I/usr/local/include
+DEFINES = -D irix_mips
+
+hostsystem	= irix.mips
+SS_OBJ	= $(hostsystem)/r_glx.o \
+	$(hostsystem)/i_x11.o \
+	$(hostsystem)/glx_service.o
+
+ifeq ($(debug), true)
+OPTIMIZE = -g
+else
+OPTIMIZE = -O2
+endif
+CFLAGS += $(OPTIMIZE)
+endif
+
+#endof IRIX
+
+
+
+ifeq ($(target), win32) 
+TFLAGS =	
+#= -b i586-mingw32
+CC 	= i686-pc-mingw32-gcc -m32
+CPP 	= cpp
+
+proj_libdir = /mnt/project/lib/win32.x86
+
+
+LIBS 	=  -lm -luser32 -lmsvcrt -lgdi32 -lwsock32 -lwinmm -lSDL -lbz2  -ljpeg 
+#/usr/local/i586-pc-mingw32/lib/mpglib.a
+# -ldinput -ldxguid 
+INCLUDES =
+DEFINES = -D win32_x86 
+#-D GL_LINKED
+hostsystem	= win32.x86
+SS_OBJ	= $(hostsystem)/r_wgl.o \
+	$(hostsystem)/i_win32.o \
+	$(hostsystem)/i_vkmap.o \
+	$(hostsystem)/wgl_service.o
+
+#	$(hostsystem)/i_dx.o \
+
+ifeq ($(debug), true)
+OPTIMIZE = -g
+SYMLINK = ln -s -n -f win32.x86.debug win32.x86
+else
+OPTIMIZE = -O2 -funroll-loops -fomit-frame-pointer -ffast-math
+#OPTIMIZE = 
+SYMLINK = ln -s -n -f win32.x86.release win32.x86
+endif
+CFLAGS += $(OPTIMIZE)
+endif
+#endof win32
+
+CC += $(TFLAGS)
+COPY = cp
+RM = rm -f
+
+LIFE_DIR = ./dd1
+
+INCLUDES += -I. -I./shared -I./r_gen_gl
+DEFINES += -D __USE_IBASE 
+
+DEFINES += -D S_INGAME -D trace_functions -Dmm_checksize
+#-D log_malloc 
+
+BUILD_DEFINES = -D BHOSTSYSTEM="\"$(hostsystem)\"" -D BDATE="\"$(build_date)\"" -D BHOST="\"$(build_host)\"" -D BVERSION="\"$(build_version)\"" -D DD_BTYPE="\"$(build_type)\"" -D BCOMMENT="\"$(build_comment)\"" 
+
+# -Dtf_complete
+
+OBJ = 	$(hostsystem)/g_main.o \
+	$(hostsystem)/la_service.o \
+	$(hostsystem)/la_varviews.o \
+	$(hostsystem)/g_resources.o \
+	$(hostsystem)/res_tga.o \
+	$(hostsystem)/res_gltex.o \
+	$(hostsystem)/res_gltex_jpeg.o \
+	$(hostsystem)/res_submd.o \
+	$(hostsystem)/res_moves.o \
+	$(hostsystem)/res_sound.o \
+	$(hostsystem)/res_lump.o \
+	$(hostsystem)/res_mp3.o \
+	$(hostsystem)/g_gl.o \
+	$(hostsystem)/g_map.o \
+	$(hostsystem)/g_model.o \
+	$(hostsystem)/g_psys.o \
+	$(hostsystem)/db_lightmap.o \
+	$(hostsystem)/db_shape.o \
+	$(hostsystem)/db_uoc.o \
+	$(hostsystem)/sh_input.o \
+	$(hostsystem)/sh_parser.o \
+	$(hostsystem)/sh_alias.o \
+	$(hostsystem)/sh_visual.o \
+	$(hostsystem)/sh_menu.o \
+	$(hostsystem)/snd_deamon.o \
+	$(hostsystem)/snd_intern.o \
+	$(hostsystem)/mus_mp3.o \
+	$(hostsystem)/sst_sdl.o \
+	$(hostsystem)/ca_service.o \
+	$(hostsystem)/ib_service.o \
+	$(hostsystem)/shock.o \
+	$(hostsystem)/sys_time.o \
+	$(hostsystem)/sys_console.o \
+	$(hostsystem)/l_api.o \
+	$(hostsystem)/a_hud.o \
+	$(hostsystem)/sys_dll.o \
+	$(hostsystem)/sys_env.o \
+	$(hostsystem)/gl_service.o \
+	$(hostsystem)/r_gltex.o \
+	$(hostsystem)/r_draw2d.o \
+	$(hostsystem)/r_glbackend.o \
+	$(hostsystem)/gc_service.o \
+	$(hostsystem)/gc_util.o \
+	$(hostsystem)/gc_ccl.o \
+	$(hostsystem)/gc_csv.o \
+	$(hostsystem)/g_console.o \
+	$(hostsystem)/g_server.o \
+	$(hostsystem)/g_client.o \
+	$(hostsystem)/g_time.o \
+	$(hostsystem)/g_library.o \
+\
+	$(hostsystem)/shared.o \
+	$(hostsystem)/lib_math.o \
+	$(hostsystem)/lib_bezier.o \
+	$(hostsystem)/lib_container.o \
+	$(hostsystem)/lib_tag.o \
+	$(hostsystem)/lib_hobj.o \
+	$(hostsystem)/lib_model.o \
+	$(hostsystem)/lib_psys.o \
+	$(hostsystem)/lib_hmanager.o \
+	$(hostsystem)/lib_pack.o \
+	$(hostsystem)/lib_uoc.o \
+	$(hostsystem)/lib_queue.o \
+	$(hostsystem)/lib_parse.o \
+	$(hostsystem)/lib_digest.o \
+\
+	$(hostsystem)/u_expand.o \
+	$(hostsystem)/u_va.o \
+	$(hostsystem)/u_token.o \
+	$(hostsystem)/u_hobj.o \
+	$(hostsystem)/u_pixel.o \
+	$(hostsystem)/u_mempack.o \
+\
+	$(hostsystem)/tfunc.o \
+	$(hostsystem)/l_wrap.o \
+	$(CP_OBJ) \
+	$(SS_OBJ)
+
+
+
+OBJ_FAKE = $(hostsystem)/r_fake/g_blockmap.o \
+	$(hostsystem)/r_fake/g_bmlink.o \
+	$(hostsystem)/r_fake/g_bmobjects.o \
+	$(hostsystem)/r_fake/g_ccmap3.o \
+	$(hostsystem)/r_fake/g_map3cache.o \
+	$(hostsystem)/r_fake/g_trace.o \
+	$(hostsystem)/r_fake/r_data.o \
+	$(hostsystem)/r_fake/r_frustum.o \
+	$(hostsystem)/r_fake/r_hvis.o \
+	$(hostsystem)/r_fake/r_hvisclip.o \
+	$(hostsystem)/r_fake/r_initdata.o \
+	$(hostsystem)/r_fake/r_initgl.o \
+	$(hostsystem)/r_fake/r_math.o \
+	$(hostsystem)/r_fake/r_misc.o \
+	$(hostsystem)/r_fake/r_plane.o \
+	$(hostsystem)/r_fake/r_screendump.o \
+	$(hostsystem)/r_fake/r_sky.o \
+	$(hostsystem)/r_fake/r_sprite.o \
+	$(hostsystem)/r_fake/r_videoscape.o \
+	$(hostsystem)/r_fake/render3.o \
+	$(hostsystem)/r_fake/r_shapes.o \
+	$(hostsystem)/r_fake/r_light.o \
+	$(hostsystem)/r_fake/r_light_sw.o \
+	$(hostsystem)/r_fake/r_light_gl.o \
+	$(hostsystem)/r_fake/r_lightmap.o \
+	$(hostsystem)/r_fake/r_shpctrljobs.o \
+	$(hostsystem)/r_fake/J_AmbientColor.o \
+	$(hostsystem)/r_fake/J_ModulateAlpha.o \
+	$(hostsystem)/r_fake/J_ModulateColor.o \
+	$(hostsystem)/r_fake/J_ShiftTexCoord.o \
+	$(hostsystem)/r_fake/J_EnvMap.o \
+	$(hostsystem)/r_fake/J_DetailMap.o \
+	$(hostsystem)/r_fake/J_SurfaceDeform.o
+
+OBJ_R_GEN_GL =	$(hostsystem)/r_gen_gl/r_real.o \
+	$(hostsystem)/r_gen_gl/shape_instance.o \
+	$(hostsystem)/r_gen_gl/shape_util.o \
+	$(hostsystem)/r_gen_gl/shape_db.o \
+	$(hostsystem)/r_gen_gl/layer_instance.o \
+	$(hostsystem)/r_gen_gl/layer.o \
+	$(hostsystem)/r_gen_gl/layers.o \
+	$(hostsystem)/r_gen_gl/tf2d.o \
+	$(hostsystem)/r_gen_gl/mesh.o \
+	$(hostsystem)/r_gen_gl/tess.o \
+	$(hostsystem)/r_gen_gl/tess_curved_face.o \
+	$(hostsystem)/r_gen_gl/tess_simple_face.o \
+	$(hostsystem)/r_gen_gl/tess_curved_surface.o \
+	$(hostsystem)/r_gen_gl/tess_meshtile.o \
+	$(hostsystem)/r_gen_gl/tess_glmesh.o \
+	$(hostsystem)/r_gen_gl/trify_generic_polygon.o \
+	$(hostsystem)/r_gen_gl/imgcache.o \
+	$(hostsystem)/r_gen_gl/unitex.o \
+	$(hostsystem)/r_gen_gl/shader.o
+
+OBJ_R_GEOM_GL =	$(hostsystem)/r_geom_gl/r_real.o
+
+
+all: prepare_build dep $(OBJ) $(hostsystem)/dd.r_gen_gl 
+#$(hostsystem)/tgfkaa.r_geom_gl
+#life.so
+prepare_build: prepare_links
+	@echo building for target $(hostsystem)
+	if [  -f version.h ]; then \
+		echo version.h found; \
+	else \
+		echo build version.h; \
+		echo > version.h.in; \
+		$(CPP) -undef -dM $(BUILD_DEFINES) version.h.in version.h; \
+	fi;
+
+prepare_links:
+	@echo preapre links
+	@$(SYMLINK)
+	@if [ ! -d $(hostsystem).release ]; then rm -f $(hostsystem).release; mkdir $(hostsystem).release; fi
+	@if [ ! -d $(hostsystem).release/r_fake ]; then rm -f $(hostsystem).release/r_fake; mkdir $(hostsystem).release/r_fake; fi
+	@if [ ! -d $(hostsystem).release/r_gen_gl ]; then rm -f $(hostsystem).release/r_gen_gl; mkdir $(hostsystem).release/r_gen_gl; fi
+
+	@if [ ! -d $(hostsystem).debug ]; then rm -f $(hostsystem).debug; mkdir $(hostsystem).debug; fi
+	@if [ ! -d $(hostsystem).debug/r_fake ]; then rm -f $(hostsystem).debug/r_fake; mkdir $(hostsystem).debug/r_fake; fi
+	@if [ ! -d $(hostsystem).debug/r_gen_gl ]; then rm -f $(hostsystem).debug/r_gen_gl; mkdir $(hostsystem).debug/r_gen_gl; fi
+
+./$(hostsystem)/%.o: %.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+./$(hostsystem)/%.o: shared/%.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+./$(hostsystem)/r_fake/%.o: r_fake/%.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -I./r_fake -c $< -o $@
+
+./$(hostsystem)/r_gen_gl/%.o: ./r_gen_gl/%.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+
+dep:
+	touch $(hostsystem)/depend 
+#	makedepend $(INCLUDES) -p$(hostsystem)/ -f- *.c > $(hostsystem)/depend
+#	makedepend $(INCLUDES) -p$(hostsystem)/ -f- ./r_fake/*.c >> $(hostsystem)/depend
+#	makedepend $(INCLUDES) -p$(hostsystem)/ -f- ./r_gen_gl/*.c >> $(hostsystem)/depend
+#	makedepend $(INCLUDES) -p$(hostsystem)/ -f- ./shared/*.c >> $(hostsystem)/depend
+#	gcc $(INCLUDES) $(DEFINES) -MM *.c > depend
+
+clean: prepare_links
+	$(RM) $(hostsystem)/*.o
+	$(RM) $(hostsystem)/r_fake/*.o
+	$(RM) $(hostsystem)/r_gen_gl/*.o
+	$(RM) $(hostsystem)/depend
+	$(RM) version.h
+
+
+$(hostsystem)/dd.r_gen_gl: $(OBJ) $(OBJ_R_GEN_GL) $(OBJ_FAKE) 
+	$(CC) -o $@ $(OBJ) $(OBJ_R_GEN_GL) $(OBJ_FAKE) $(LIBS) $(CFLAGS) 
+
+$(hostsystem)/dd.r_geom_gl: $(OBJ) $(OBJ_R_GEOM_GL)
+	$(CC) -o $@ $(OBJ) $(OBJ_R_GEOM_GL) $(LIBS) $(CFLAGS)
+
+life.so:
+	echo ===========================
+	echo  building life.so
+	cd dd1; make target=$(target)
+
+include $(hostsystem)/depend
+

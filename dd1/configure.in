@@ -1,0 +1,18 @@
+AC_INIT( l_locals.h )
+
+AC_CHECK_HEADERS( stdio.h )
+
+AC_CHECK_FUNCS( memcmp memcpy strcmp strcpy )
+
+AC_CHECK_LIB( dl, dlopen, HAVE_LIBDL=1, HAVE_LIBDL=0 AC_MSG_WARN([
+missing libdl
+]))
+AC_C_BIGENDIAN( 0 )
+AC_C_INLINE( inline )
+AC_CHECK_SIZEOF( int, 4 )
+AC_CHECK_SIZEOF( char, 1 )
+
+AC_SUBST( HAVE_LIBDL )
+
+AC_CONFIG_HEADER( config.h )
+AC_OUTPUT( Makefile )

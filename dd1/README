@@ -1,0 +1,17 @@
+bla2
+hello,
+
+i've just tryed to port this to autoconf ( what is automake ? ).
+please run ./configure if config.h ( is autoconf avaliable ( <= ?! ) on
+emmess WIN16 + 15.5 ? ) is missing. ( should I include a ready-to-use config.h
+for poor mSS users ? ). 
+
+if you cannot find 'configure' in this dir, try 
+<UNIX>
+something like 'autoheader && autoconf && chmod 755 configure && ./configure'
+<XINU>
+
+<WIN>
+try to find autoconf for your toy and try to do something similiar
+to <UNIX>
+<NIW> 

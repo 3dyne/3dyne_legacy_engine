@@ -1,0 +1,301 @@
+// hud_player.c
+
+#include "cl_state.h"
+#include "cl_head.h"
+
+#include "s_mem.h"
+#include "shock.h"
+
+#include "hud_player.h"
+
+
+#define HUD_SCALE_X ( 1.0/640.0 )
+#define HUD_SCALE_Y ( 1.0/480.0 )
+
+#define HUD_NUM_X ( 32.0 )
+#define HUD_NUM_Y ( 32.0 )
+
+<<<<<<< hud_player.c
+/*
+  ==================================================
+  players main hud
+=======
+static void SetDiText( di_text_t *di, char *string, int x, int y )
+{
+	di->x = x * HUD_SCALE_X;
+	di->y = y * HUD_SCALE_Y;
+
+	strncpy( di->string, string, DI_TEXT_STRINGSIZE );
+}
+>>>>>>> 1.5
+
+<<<<<<< hud_player.c
+  ==================================================
+*/
+
+=======
+static void SetDiRect( di_rect_t *di_arg, char *resname, int x, int y, int w, int h )
+{
+	di_arg->gltex = g_api.GI_ResourceSearch( resname );
+	di_arg->x = x * HUD_SCALE_X;			
+	di_arg->y = y * HUD_SCALE_Y;
+
+	di_arg->w = w * HUD_SCALE_X;	
+	di_arg->h = h * HUD_SCALE_Y;
+	
+	di_arg->tx = 0.0;
+	di_arg->ty = 0.0;
+	di_arg->tw = 1.0;
+	di_arg->th = 1.0;
+
+	di_arg->flat_color[0] = 0xff;
+	di_arg->flat_color[1] = 0xff;
+	di_arg->flat_color[2] = 0xff;
+	di_arg->flat_color[3] = 0xff;
+}
+
+>>>>>>> 1.5
+void HUD_PlayerInit( hud_player_t *hud )
+{
+	//
+	// init test rect
+	//
+
+	int	i;
+	char	name[128];
+
+	for( i = 0; i < 11; i++ )
+	{
+		
+		if( i != 10 )
+			sprintf( name, "gltex.hud.%d", i );
+		else
+			sprintf( name, "gltex.hud.minus" );
+		
+		hud->num[i] = g_api.GI_ResourceSearch( name );
+	}
+<<<<<<< hud_player.c
+
+// face ( drawn instead of health cross )
+	hud->di_face.gltex = g_api.GI_ResourceSearch( "gltex.smilie.nice" );
+	hud->di_face.x = 256.0 * HUD_SCALE_X;			
+	hud->di_face.y = 0;
+
+	hud->di_face.w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_face.h = HUD_NUM_Y * HUD_SCALE_Y;
+	
+	hud->di_face.tx = 0.0;
+	hud->di_face.ty = 0.0;
+	hud->di_face.tw = 1.0;
+	hud->di_face.th = 1.0;
+
+	hud->di_face.flat_color[0] = 0xff;
+	hud->di_face.flat_color[1] = 0xff;
+	hud->di_face.flat_color[2] = 0xff;
+	hud->di_face.flat_color[3] = 0xff;
+
+// health pos 0 = cross
+	hud->di_health[0].gltex = g_api.GI_ResourceSearch( "gltex.hud.health" );
+	hud->di_health[0].x = 0;			
+	hud->di_health[0].y = 0;
+
+	hud->di_health[0].w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_health[0].h = HUD_NUM_Y * HUD_SCALE_Y;
+	
+	hud->di_health[0].tx = 0.0;
+	hud->di_health[0].ty = 0.0;
+	hud->di_health[0].tw = 1.0;
+	hud->di_health[0].th = 1.0;
+
+	hud->di_health[0].flat_color[0] = 0xff;
+	hud->di_health[0].flat_color[1] = 0xff;
+	hud->di_health[0].flat_color[2] = 0xff;
+	hud->di_health[0].flat_color[3] = 0xff;
+
+// health pos 1 = numer 1
+	hud->di_health[1].x = 288.0 * HUD_SCALE_X;			
+	hud->di_health[1].y = 0;
+
+	hud->di_health[1].w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_health[1].h = HUD_NUM_Y * HUD_SCALE_Y;
+	
+	hud->di_health[1].tx = 0.0;
+	hud->di_health[1].ty = 0.0;
+	hud->di_health[1].tw = 1.0;
+	hud->di_health[1].th = 1.0;
+	hud->di_health[1].flat_color[0] = 0xff;
+	hud->di_health[1].flat_color[1] = 0xff;
+	hud->di_health[1].flat_color[2] = 0xff;
+	hud->di_health[1].flat_color[3] = 0xff;
+
+// health pos 2 = number 2
+	hud->di_health[2].x = 320.0 * HUD_SCALE_X;			
+	hud->di_health[2].y = 0;
+
+	hud->di_health[2].w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_health[2].h = HUD_NUM_Y * HUD_SCALE_Y;
+	
+	hud->di_health[2].tx = 0.0;
+	hud->di_health[2].ty = 0.0;
+	hud->di_health[2].tw = 1.0;
+	hud->di_health[2].th = 1.0;
+	hud->di_health[2].flat_color[0] = 0xff;
+	hud->di_health[2].flat_color[1] = 0xff;
+	hud->di_health[2].flat_color[2] = 0xff;
+	hud->di_health[2].flat_color[3] = 0xff;
+
+// health pos 3 = number 3
+	hud->di_health[3].x = 352.0 * HUD_SCALE_X;			
+	hud->di_health[3].y = 0;
+=======
+>>>>>>> 1.5
+
+<<<<<<< hud_player.c
+	hud->di_health[3].w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_health[3].h = HUD_NUM_Y * HUD_SCALE_Y;
+=======
+	SetDiRect( &hud->di_back, "gltex.hud.back", 254, 0, 132, 34 );
+	SetDiRect( &hud->di_face, "gltex.smilie.nice", 256, 0, HUD_NUM_X, HUD_NUM_Y );
+	SetDiRect( &hud->di_health[0], "gltex.hud.0", 288, 0, HUD_NUM_X, HUD_NUM_Y );
+	SetDiRect( &hud->di_health[1], "gltex.hud.1", 320, 0, HUD_NUM_X, HUD_NUM_Y );
+	SetDiRect( &hud->di_health[2], "gltex.hud.2", 352, 0, HUD_NUM_X, HUD_NUM_Y );
+	SetDiRect( &hud->di_crosshair, "gltex.hud.crosshair01", 304, 224, HUD_NUM_X, HUD_NUM_Y );
+>>>>>>> 1.5
+	
+<<<<<<< hud_player.c
+	hud->di_health[3].tx = 0.0;
+	hud->di_health[3].ty = 0.0;
+	hud->di_health[3].tw = 1.0;
+	hud->di_health[3].th = 1.0;
+	hud->di_health[3].flat_color[0] = 0xff;
+	hud->di_health[3].flat_color[1] = 0xff;
+	hud->di_health[3].flat_color[2] = 0xff;
+	hud->di_health[3].flat_color[3] = 0xff;
+
+// crosshair
+	hud->di_crosshair.gltex = g_api.GI_ResourceSearch( "gltex.hud.crosshair01" );
+	hud->di_crosshair.x = 304.0 * HUD_SCALE_X;			
+	hud->di_crosshair.y = 224.0 * HUD_SCALE_Y;
+=======
+>>>>>>> 1.5
+
+<<<<<<< hud_player.c
+	hud->di_crosshair.w = HUD_NUM_X * HUD_SCALE_X;	
+	hud->di_crosshair.h = HUD_NUM_Y * HUD_SCALE_Y;
+	
+	hud->di_crosshair.tx = 0.0;
+	hud->di_crosshair.ty = 0.0;
+	hud->di_crosshair.tw = 1.0;
+	hud->di_crosshair.th = 1.0;
+	hud->di_crosshair.flat_color[0] = 0xff;
+	hud->di_crosshair.flat_color[1] = 0xff;
+	hud->di_crosshair.flat_color[2] = 0xff;
+	hud->di_crosshair.flat_color[3] = 0xff;
+=======
+// test text
+	SetDiText( &hud->di_frag, "frags: 0", 0, 0 );
+			
+>>>>>>> 1.5
+
+	hud->health = 600;
+
+
+
+}
+
+void HUD_PlayerCleanUp( hud_player_t *hud )
+{
+
+}
+
+
+static void HUD_DrawNumHealth( hud_player_t *hud, int value )
+{
+	char	num[16];
+	int	i;
+	
+
+	if( value > 999 )
+		value = 999;
+
+	if( value < -99 )
+		value = -99;
+
+
+	sprintf( num, "%i", value );
+
+	for( i = 0; i < 3; i++ )
+	{
+		if( num[i] == 0 )
+			break;
+
+		if( num[i] == '-' )
+			hud->di_health[i].gltex = hud->num[10];
+		else
+			hud->di_health[i].gltex = hud->num[num[i] - '0']; // pew!
+		
+		g_api.Draw_Rect( &hud->di_health[i] );
+	}
+	g_api.Draw_Rect( &hud->di_face );
+}
+
+void HUD_PlayerDraw( hud_player_t *hud )
+{
+	// draw test rect
+	
+//	g_api.Draw_Rect( &hud->di_rect );
+	g_api.Draw_Rect( &hud->di_back );
+	HUD_DrawNumHealth( hud, hud->health );
+	g_api.Draw_Rect( &hud->di_crosshair );
+<<<<<<< hud_player.c
+}
+
+/*
+  ==================================================
+  frag ranking hud
+
+  ==================================================
+*/
+
+/*
+  ==============================
+  HUD_DrawFragRanking
+
+  ==============================
+*/
+
+void HUD_DrawFragRanking( void )
+{
+	int		i, j;
+
+	//
+	// sort cl_huds by fragnum
+	//
+	for ( i = cl_num_hud-1; i >= 0; i-- )
+	{
+		for ( j = 1; j <= i; j++ )
+		{
+			if ( cl_huds[j-1]->numfrag < cl_huds[j]->numfrag )
+			{
+				hud_player_t	*tmp;
+				
+				tmp = cl_huds[j-1];
+				cl_huds[j-1] = cl_huds[j];
+				cl_huds[j] = tmp;
+			}
+		}
+	}
+
+	for ( i = 0; i < cl_num_hud; i++ )
+	{
+		__named_message( "%d '%s': %d\n", i, cl_huds[i]->nickname, cl_huds[i]->numfrag );
+	}
+=======
+
+	sprintf( hud->di_frag.string, "frags: %d", hud->numfrag );
+
+	g_api.Draw_Text( &hud->di_frag );
+
+	
+>>>>>>> 1.5
+}

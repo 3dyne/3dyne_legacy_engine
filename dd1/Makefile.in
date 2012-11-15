@@ -1,0 +1,98 @@
+
+# variables:
+# TARGET  -- target
+# DEBUG   -- set true of false
+
+# supported targets:
+# linux
+# win32 (Xmingw32)
+
+ifeq ($(target), )
+target := $(shell uname | tr '[A-Z]' '[a-z]')
+endif
+
+ifeq ($(target), linux)
+CC	= gcc
+LD	= ld
+
+TFLAGS	=
+LIBS = -lgii -lglide2x
+CFLAGS = -Wall -pipe
+hostsystem	= linux.i386
+
+ifeq ($(debug), true )
+OPTIMIZE = -g
+else
+OPTIMIZE = -O6 -mpentium -funroll-loops -fomit-frame-pointer -ffast-math
+endif
+CFLAGS += $(OPTIMIZE)
+endif
+
+ifeq ($(target), win32) 
+AS	= i586-mingw32-as
+TFLAGS	= -b i586-mingw32
+CC 	= gcc
+LD 	= i586-mingw32-ld
+DLLTOOL	= i586-mingw32-dlltool
+LIBS = -liberty -lm -luser32 -lcrtdll -lglide2x -lfxmisc
+hostsystem	= win32.x86
+ifeq ($(debug), true )
+OPTIMIZE = -g
+else
+OPTIMIZE = -O6 -mpentium -funroll-loops -fomit-frame-pointer -ffast-math
+endif
+CFLAGS += $(OPTIMIZE)
+CFLAGS += -D__MSC__
+endif
+
+CC += $(TFLAGS)
+LD += $(TFLAGS)
+
+
+
+COPY = cp
+RM = rm -f
+INCLUDES = -I. -I$(TDDIR)/shared
+DEFINES = 
+
+OBJ = 	$(hostsystem)/l_main.o \
+	$(hostsystem)/l_util.o \
+	$(hostsystem)/l_tables.o \
+	$(hostsystem)/shock.o \
+	$(hostsystem)/vec.o \
+	$(hostsystem)/l_player.o \
+	$(hostsystem)/l_phys.o \
+	$(hostsystem)/l_spring.o
+
+#LIBDL = @HAVE_LIBDL@
+
+all: $(hostsystem)/depend $(OBJ) $(hostsystem)/life.so
+
+$(hostsystem)/depend: *.c *.h
+	makedepend $(INCLUDES) -I/usr/local/include -p$(hostsystem)/ -f- *.c > $(hostsystem)/depend 2> /dev/null
+
+clean:
+	$(RM) $(hostsystem)/*.o $(hostsystem)/*.so
+	$(RM) $(hostsystem)/depend
+
+./$(hostsystem)/%.o: %.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+
+linux.i386/life.so: $(OBJ)
+	$(RM) $@
+	$(CC) -shared -o $@ $(OBJ) -lm
+	ldd -r $@
+
+win32.x86/life.so: $(OBJ)
+	$(RM) $@
+	$(LD) -s --base-file base.tmp --dll -o $(hostsystem)/life.so $(OBJ) $(LIBS)
+	$(DLLTOOL) --def $(hostsystem)/life.def --output-exp life.exp --dllname $(hostsystem)/life.so --base-file base.tmp --as $(AS)
+	$(LD) -s --base-file base.tmp life.exp -dll -o $(hostsystem)/life.so $(OBJ) $(LIBS)
+	$(DLLTOOL) --dllname $(hostsystem)/life.so --def $(hostsystem)/life.def \
+		--base-file base.tmp --output-exp life.exp --as $(AS)
+		
+	$(LD) life.exp --dll -o $(hostsystem)/life.so  $(OBJ) $(LIBS)
+
+
+include $(hostsystem)/depend

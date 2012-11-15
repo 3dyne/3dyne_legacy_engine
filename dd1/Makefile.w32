@@ -1,0 +1,31 @@
+# handmade Makefile for win32. don't know if it works.
+CC = gcc 
+COPY = copy
+RM = del
+CFLAGS = -Wall -pipe -O2 -g -fpic
+INCLUDES = -I. 
+
+DEFINES = 
+GPI = $(TDDIR)/gs_gpi/gs_gpi.a
+
+OBJ = l_main.o l_util.o l_tables.o shock.o vec.o l_player.o l_phys.o l_spring.o
+
+all: $(OBJ) life.so
+
+depend: *.c *.h
+	$(CC) $(INCLUDES) -MM *.c > $@
+
+clean:
+	$(RM) *.o *.a
+	$(RM) depend
+
+%.o: %.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $<
+
+
+life.so: $(OBJ)
+	$(RM) $@
+	$(CC) -shared -Wl,-soname,$@ -o $@ $(OBJ) -lm
+	ldd -r $@
+
+include depend

@@ -1,0 +1,103 @@
+# this is the native makefile for windows
+# it 
+#	doesn't allow cross compiling
+#	is not intended to be used for development
+
+build_date = some day
+build_host = a windows box
+build_version = 0.0
+build_type = development
+build_comment = If you have it be glad!
+
+LIFE_DIR = tgfkaa1
+
+
+CC	= gcc
+LIBS	= -lmsvcrt -lgdi32 -luser32 -lm
+CFLAGS 	= -Wall -pipe
+INCLUDES =
+DEFINES = -D win32_x86
+RM	= del
+
+hostsystem = win32.x86
+
+SS_OBJ	= $(hostsystem)/r_wgl.o \
+	$(hostsystem)/i_dx.o \
+	$(hostsystem)/wgl_service.o
+
+OPTIMIZE = -g
+
+
+CFLAGS += $(OPTIMIZE)
+
+
+INCLUDES += -I. -I $(LIFE_DIR) -I shared
+
+#DEFINES += -D__USE_IBASE -D SYS_HOSTSYSTEM="\"$(hostsystem)\"" -DBUILD_DATE="\"$(build_date)\"" -DBUILD_HOST="\"$(build_host)\"" -DBUILD_VERSION="\"$(build_version)\"" -DBUILD_TYPE="\"$(build_type)\"" -DBUILD_COMMENT="\"$(build_comment)\""
+DEFINES += -D__USE_IBASE="\"bla\"" -D SYS_HOSTSYSTEM="\"$(hostsystem)\"" -D BUILD_DATE="\"bla\""   -D BUILD_HOST="\"bla\""  -DBUILD_VERSION="\"bla\""  -D BUILD_TYPE="\"bla\""  -D BUILD_COMMENT="\"bla\"" 
+
+
+OBJ = 	$(hostsystem)/g_main.o \
+	$(hostsystem)/la_service.o \
+	$(hostsystem)/g_gl.o \
+	$(hostsystem)/sh_input.o \
+	$(hostsystem)/sh_parser.o \
+	$(hostsystem)/sh_alias.o \
+	$(hostsystem)/sh_visual.o \
+	$(hostsystem)/sh_menu.o \
+	$(hostsystem)/snd_deamon.o \
+	$(hostsystem)/ca_service.o \
+	$(hostsystem)/ca_wave.o \
+	$(hostsystem)/ca_arr.o \
+	$(hostsystem)/ca_lump.o \
+	$(hostsystem)/ca_tga.o \
+	$(hostsystem)/ib_service.o \
+	$(hostsystem)/shock.o \
+	$(hostsystem)/lib_lump.o \
+	$(hostsystem)/sys_time.o \
+	$(hostsystem)/g_player.o \
+	$(hostsystem)/l_api.o \
+	$(hostsystem)/a_hud.o \
+	$(hostsystem)/sys_dll.o \
+	$(hostsystem)/sys_env.o \
+	$(hostsystem)/gl_service.o \
+	$(hostsystem)/u_packed.o \
+	$(hostsystem)/lib_math.o \
+	$(hostsystem)/r_gltex.o \
+	$(hostsystem)/r_draw2d.o \
+	$(hostsystem)/gc_service.o \
+	$(SS_OBJ)
+
+OBJ_R_GEN_GL =	$(hostsystem)/r_gen_gl/r_real.o
+
+OBJ_R_GEOM_GL =	$(hostsystem)/r_geom_gl/r_real.o
+
+
+all: $(OBJ) $(hostsystem)/tgfkaa.r_gen_gl $(hostsystem)/tgfkaa.r_geom_gl
+#life.so
+
+$(hostsystem)/%.o: %.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+
+
+./$(hostsystem)/%.o: shared/%.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+./$(hostsystem)/r_gen_gl/%.o: ./r_gen_gl/%.c
+	$(CC) $(INCLUDES) $(DEFINES) $(CFLAGS) -c $< -o $@
+
+
+
+clean:
+	$(RM) $(hostsystem)/*
+	$(RM) $(hostsystem)/depend
+
+
+$(hostsystem)/tgfkaa.r_gen_gl: $(OBJ) $(OBJ_R_GEN_GL)
+	$(CC) -o $@ $(OBJ) $(OBJ_R_GEN_GL) $(LIBS) $(CFLAGS)
+
+$(hostsystem)/tgfkaa.r_geom_gl: $(OBJ) $(OBJ_R_GEOM_GL)
+	$(CC) -o $@ $(OBJ) $(OBJ_R_GEOM_GL) $(LIBS) $(CFLAGS)
+
+#include $(hostsystem)/depend
