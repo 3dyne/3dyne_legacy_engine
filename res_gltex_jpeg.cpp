@@ -36,8 +36,9 @@
 #include <stdio.h>
 #include <jpeglib.h>
 #include <string.h>
-#include <alloca.h>
+//#include <alloca.h>
 #include <string.h>
+#include <vector>
 
 #include "ib_service.h"
 #include "res_gltex.h"
@@ -272,7 +273,9 @@ res_gltex_cache_t * Res_CacheInGLTEX_jpg( res_gltex_register_t *reg )
 
 	ptr = image + ( row_stride * (cinfo.output_height - 1) );
 
-	buffer = (unsigned char *)alloca( row_stride );
+	std::vector<unsigned char>buffer_data( row_stride );
+	buffer = buffer_data.data();
+	//buffer = (unsigned char *)alloca( row_stride );
 
 //	printf( "row_stride: %d\n", row_stride );
 

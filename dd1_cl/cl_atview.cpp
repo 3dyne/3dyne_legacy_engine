@@ -46,9 +46,9 @@
 
 #ifdef win32_x86
 #include <stdlib.h>
-static float randomf() {
-  return (float)rand() / RAND_MAX;
-}
+//static float randomf() {
+//  return float(rand()) / RAND_MAX;
+//}
 
 #endif
 

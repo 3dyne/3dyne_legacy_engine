@@ -37,7 +37,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <alloca.h>
+#include <vector>
+//#include <alloca.h>
 
 #include "lib_math.h"
 #include "lib_container.h"
@@ -185,7 +186,7 @@ icMgrCacheRes IC_MgrCacheSubImage( ic_mgr_t *mgr, ic_subimage_t *sub )
 
 	if ( sub->width > mgr->width || sub->height > mgr->height )
 	{
-		Error( "IC_MgrUpdateSubImage: subimage exceed maximum size\n" );
+		__error( "IC_MgrUpdateSubImage: subimage exceed maximum size\n" );
 		return ICMgrCacheRes_invalid_size;
 	}
 
@@ -299,7 +300,9 @@ ic_image_t * IC_NewImage( int width, int height )
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	}
 
-	tmpimg = (unsigned char *)alloca( img_bytes );
+	std::vector<unsigned char>tmpimg_data(img_bytes);
+	tmpimg = tmpimg_data.data();
+	//tmpimg = (unsigned char *)alloca( img_bytes );
 	memset( tmpimg, 0, img_bytes );
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -548,13 +551,13 @@ void IC_ImageTakeEmptyRectangle( ic_image_t *img, int width, int height, int *xo
 		
 	
 	if ( !img->best_last_rect )
-		Error( "IC_ImageTakeEmptyRectangle: best_last_rect is (null)\n" );
+		__error( "IC_ImageTakeEmptyRectangle: best_last_rect is (null)\n" );
 
 	gapw = img->best_last_rect->width - width;
 	gaph = img->best_last_rect->height - height;
 
 	if ( gapw < 0 || gaph < 0 )
-		Error( "IC_ImageTakeEmptyRectangle: best_last_rect doesn't fit the requested size\n" );
+		__error( "IC_ImageTakeEmptyRectangle: best_last_rect doesn't fit the requested size\n" );
 	
 	*xofs = img->best_last_rect->xofs;
 	*yofs = img->best_last_rect->yofs;
@@ -569,7 +572,7 @@ void IC_ImageTakeEmptyRectangle( ic_image_t *img, int width, int height, int *xo
 	}
 
 	if ( !rect )
-		Error( "IC_ImageTakeEmptyRectangle: odd, can't find best_last_rect in list\n" );
+		__error( "IC_ImageTakeEmptyRectangle: odd, can't find best_last_rect in list\n" );
 
 	U_ListIterRemoveGoNext( &iter );
 

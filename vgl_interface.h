@@ -40,6 +40,12 @@
 #ifndef __vgl_interface_h
 #define __vgl_interface_h
 
+#include <windows.h>
+#include <gl/GL.h>
+
+
+
+
 #include "gl_defs.h"
 
 typedef struct
@@ -1834,7 +1840,7 @@ typedef void ( APIENTRY * glCopyColorTable_t ) ( GLenum target, GLenum internalf
 	GLint x, GLint y, GLsizei width );
 
 
-
+#if 0
 // real prototypes
 // vgl api
 
@@ -2578,8 +2584,6 @@ GLAPI glInitNames_t glInitNames;
 GLAPI glLoadName_t glLoadName;
 GLAPI glPushName_t glPushName;
 GLAPI glPopName_t glPopName;
-GLAPI glActiveTextureARB_t glActiveTextureARB;
-GLAPI glClientActiveTextureARB_t glClientActiveTextureARB;
 GLAPI glMultiTexCoord1dARB_t glMultiTexCoord1dARB;
 GLAPI glMultiTexCoord1dvARB_t glMultiTexCoord1dvARB;
 GLAPI glMultiTexCoord1fARB_t glMultiTexCoord1fARB;
@@ -2590,8 +2594,7 @@ GLAPI glMultiTexCoord1sARB_t glMultiTexCoord1sARB;
 GLAPI glMultiTexCoord1svARB_t glMultiTexCoord1svARB;
 GLAPI glMultiTexCoord2dARB_t glMultiTexCoord2dARB;
 GLAPI glMultiTexCoord2dvARB_t glMultiTexCoord2dvARB;
-GLAPI glMultiTexCoord2fARB_t glMultiTexCoord2fARB;
-GLAPI glMultiTexCoord2fvARB_t glMultiTexCoord2fvARB;
+
 GLAPI glMultiTexCoord2iARB_t glMultiTexCoord2iARB;
 GLAPI glMultiTexCoord2ivARB_t glMultiTexCoord2ivARB;
 GLAPI glMultiTexCoord2sARB_t glMultiTexCoord2sARB;
@@ -2646,3 +2649,14 @@ GLAPI glCopyColorTable_t glCopyColorTable;
 
 #endif
 
+#endif
+
+GLAPI vglActiveTextureARB_t vglActiveTextureARB;
+GLAPI vglClientActiveTextureARB_t vglClientActiveTextureARB;
+GLAPI vglMultiTexCoord2fARB_t vglMultiTexCoord2fARB;
+GLAPI vglMultiTexCoord2fvARB_t vglMultiTexCoord2fvARB;
+
+GLAPI glActiveTextureARB_t glActiveTextureARB;
+GLAPI glClientActiveTextureARB_t glClientActiveTextureARB;
+GLAPI glMultiTexCoord2fARB_t glMultiTexCoord2fARB;
+GLAPI glMultiTexCoord2fvARB_t glMultiTexCoord2fvARB;

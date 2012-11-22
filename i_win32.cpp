@@ -113,7 +113,7 @@ void I_Update()
 
 int I_Win32TryVK( int vk, int *isshift )
 {
-	int	gsksym;
+	gs_ksym	gsksym;
        
 	switch( vk )
 	{
@@ -157,7 +157,7 @@ int I_Win32TryVK( int vk, int *isshift )
 		break;
 
 	case VK_RETURN:
-		gsksym = '\n';
+		gsksym = gs_ksym('\n');
 		break;
 
 	case VK_ESCAPE:
@@ -249,7 +249,7 @@ void I_Win32DoMouse()
 	}
 }
 
-static i_scantosyms[128] = {
+static int i_scantosyms[128] = {
 	0, GSK_ESCAPE, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
 	'-', '=', 8, 9, 
 	'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']',
@@ -267,18 +267,18 @@ static i_scantosyms[128] = {
 };
 
 
-static int ScanCodeToSym( int scan )
+static gs_ksym ScanCodeToSym( int scan )
 {
 	scan = ( scan >> 16 ) & 0xff;
 	if ( scan < 128 )
 	{
-		return i_scantosyms[scan];
+		return gs_ksym(i_scantosyms[scan]);
 	}
 
-	return 0;
+	return gs_ksym(0);
 }
 
-void KeyEvent( int sym, int type )
+void KeyEvent( gs_ksym sym, int type )
 {
 	keventlist[keventlistptr].sym = sym;
 	keventlist[keventlistptr].type = type;
@@ -330,7 +330,7 @@ void I_Win32Update()
 			}
 #else
 			{
-				int sym;
+				gs_ksym sym;
 				
 				sym = ScanCodeToSym( msg.lParam );
 				KeyEvent( sym, SYMTYPE_PRESS );
@@ -358,7 +358,7 @@ void I_Win32Update()
 			}
 #else
 			{
-				int sym;
+				gs_ksym sym;
 				
 				sym = ScanCodeToSym( msg.lParam );
 				KeyEvent( sym, SYMTYPE_RELEASE );			
@@ -413,5 +413,5 @@ void I_Win32Update()
 		}
 	}
 	I_Win32DoMouse();
-	keventlist[0].sym = keventlistptr;
+	keventlist[0].sym = gs_ksym(keventlistptr);
 }

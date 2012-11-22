@@ -69,7 +69,7 @@ void Tess_CurvedSurface_ClassifyLOD( int *u_lod, int *v_lod, int u_order, int v_
 
 	if ( u_order != 3 || v_order != 3 )
 	{
-		Error( "shame! only third order bezier surface by now ( u_order = %d, v_order = %d )\n", u_order, v_order );
+		__error( "shame! only third order bezier surface by now ( u_order = %d, v_order = %d )\n", u_order, v_order );
 	}
 
 	u_remove = false;
@@ -289,10 +289,10 @@ void Tess_CurvedSurface_CalcBoundBox( shape_t *shp )
 	int		i;
 
 	if ( shp->tess_name != ShapeTesselation_curved_surface )
-		Error( "tess_name %d is invalid\n", shp->tess_name );
+		__error( "tess_name %d is invalid\n", shp->tess_name );
 
 	if ( !shp->mesh )
-		Error( "(null) mesh\n" );
+		__error( "(null) mesh\n" );
 
 	Mesh_GetVec3dBase( shp->mesh, 0, &vnum, &verts );
 	U_VACalcBB( verts, vnum, shp->min, shp->max );
@@ -324,15 +324,15 @@ void Tess_CreateMesh_curved_surface( shape_t *shp )
 
 		
 	if ( shp->tess_name != ShapeTesselation_curved_surface )
-		Error( "tess_name invalid\n" );
+		__error( "tess_name invalid\n" );
 
 	u_order = shp->unum;
 	v_order = shp->vnum;
 	
 	if ( u_order <= 1 || u_order >= CURVED_SURFACE_MAX_U_ORDER )
-		Error( "invalid u order\n" );
+		__error( "invalid u order\n" );
 	if ( v_order <= 1 || v_order >= CURVED_SURFACE_MAX_V_ORDER )
-		Error( "invalid v order\n" );
+		__error( "invalid v order\n" );
 
 	for ( u = 0; u < u_order; u++ )
 	{
@@ -350,19 +350,19 @@ void Tess_CreateMesh_curved_surface( shape_t *shp )
 		v = cp->v;
 
 		if ( u < 0 || u >= u_order )
-			Error( "invalid control point\n" );
+			__error( "invalid control point\n" );
 		if ( v < 0 || v >= v_order )
-			Error( "invalid control point\n" );	    
+			__error( "invalid control point\n" );	    
 
 		if ( fs[u][v] != CURVED_SURFACE_FLAGS_NONE )
-			Error( "dublicated control points\n" );
+			__error( "dublicated control points\n" );
 
 		fs[u][v] |= CURVED_SURFACE_FLAGS_USED;	
 		Vec3dCopy( pts[u][v], cp->p );
 	}
 
 	if ( cpnum != u_order*v_order )
-		Error( "not enough control points\n" );
+		__error( "not enough control points\n" );
 
 	// fixme: lod init
 	if ( shp->u_lod == 0 && shp->v_lod == 0 )

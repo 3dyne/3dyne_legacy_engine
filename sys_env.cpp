@@ -51,7 +51,7 @@ int		g_ncmdshow;
 static char 	text[128];
 
 
-#if defined( linux_i386 ) || defined( irix_mips )
+#if defined( linux_i386 ) || defined( irix_mips ) || defined( win32_x86 )
 int main( int argc, char *argv[] )
 {
 	int	ret;
@@ -62,7 +62,7 @@ int main( int argc, char *argv[] )
 
 #elif defined( win32_x86 )
 
-static char	faked_argv[] = "DarkestDays";
+static const char	*faked_argv[] = {"DarkestDays"};
 int APIENTRY WinMain( HINSTANCE hCurrentInst,
 		      HINSTANCE hPreviousInst,
 		      LPSTR lpszCmdLine,
@@ -71,7 +71,7 @@ int APIENTRY WinMain( HINSTANCE hCurrentInst,
 {
 	g_wininstance = hCurrentInst;
 	g_ncmdshow = nCmdShow;
-	g_main( 1, faked_argv );
+	g_main( 1, const_cast<char **>(faked_argv) );
 }
 #endif
 

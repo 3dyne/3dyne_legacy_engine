@@ -326,7 +326,7 @@ void PsysRunManipulation_fire2( cl_at_psys_t *psys )
 {
 	vec3d_t		mvec;
 	
-	if ( (random()%1000) < 50 )
+	if ( (rand()%1000) < 50 )
 	{
 		psys->in_manipulation ^= 1;
 
@@ -335,7 +335,7 @@ void PsysRunManipulation_fire2( cl_at_psys_t *psys )
 			Vec3dInit( mvec, -0.5+(rand()%1000)/1000.0,0.0*(rand()%1000)/1000.0, -0.5+(rand()%1000)/1000.0 );
 			Vec3dUnify( mvec );
 			
-			if ( (random()%1000) < 200 && 0 )
+			if ( (rand()%1000) < 200 && 0 )
 			{
 				Vec3dScale( mvec, 3.0, mvec );
 			}

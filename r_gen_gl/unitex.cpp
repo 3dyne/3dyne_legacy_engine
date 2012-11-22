@@ -180,7 +180,7 @@ void UniTex_TryToValidate( unitex_t *uni )
 	}
 	else
 	{
-		Error( "invalid source in unitex\n");	
+		__error( "invalid source in unitex\n");	
 	}
 }
 
@@ -208,7 +208,7 @@ void UniTex_TryToInvalidate( unitex_t *uni )
 	}	
 	else
 	{
-		Error( "invalid source in unitex\n");
+		__error( "invalid source in unitex\n");
 	}
 }
 
@@ -267,7 +267,7 @@ void UniTex_RealTexCoord_01( unitex_t *uni, vec2d_t out, vec2d_t in )
 	}
 	else
 	{
-		Error( "invalid source in unitex\n");
+		__error( "invalid source in unitex\n");
 	}
 }
 
@@ -328,7 +328,7 @@ void UniTex_RealTexCoord_0N( unitex_t *uni, vec2d_t out, vec2d_t in )
 	}
 	else
 	{
-		Error( "invalid source in unitex\n");
+		__error( "invalid source in unitex\n");
 	}
 	
 }

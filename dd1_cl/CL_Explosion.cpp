@@ -178,7 +178,7 @@ static void RunExplosion( cl_ati_t *atif )
 			explosion->ri_sprite.rotate = (explosion->time_start+cl_time)/8;
 			explosion->ri_sprite.gltex_res = g_api.GI_ResourceSearch( "gltex.fx.smoke2" );
 			
-			explosion->ri_sprite.rgba[3] = (1000-abs(time_run-1000))/4;
+			explosion->ri_sprite.rgba[3] = (1000-abs(int(time_run-1000)))/4;
 			
 			g_api.Render_Sprite( &explosion->ri_sprite );
 			
@@ -199,7 +199,7 @@ static void RunExplosion( cl_ati_t *atif )
 			explosion->ri_sprite.rotate = (explosion->time_start+cl_time)/8;
 			explosion->ri_sprite.gltex_res = g_api.GI_ResourceSearch( "gltex.fx.smoke2" );
 			
-			explosion->ri_sprite.rgba[3] = (1000-abs(time_run-1000))/4;
+			explosion->ri_sprite.rgba[3] = (1000-abs(int(time_run-1000)))/4;
 			
 			g_api.Render_Sprite( &explosion->ri_sprite );
 			

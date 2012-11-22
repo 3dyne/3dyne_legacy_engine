@@ -120,10 +120,10 @@ void Tess_CurvedFace_CalcBoundBox( shape_t *shp )
 	int		i;
 
 	if ( shp->tess_name != ShapeTesselation_curved_face )
-		Error( "tess_name %d is invalid\n", shp->tess_name );
+		__error( "tess_name %d is invalid\n", shp->tess_name );
 
 	if ( !shp->mesh )
-		Error( "(null) mesh\n" );
+		__error( "(null) mesh\n" );
 	
 	Mesh_GetVec3dBase( shp->mesh, 0, &vnum, &verts );
 	U_VACalcBB( verts, vnum, shp->min, shp->max );
@@ -154,21 +154,21 @@ void Tess_CreateMesh_curved_face( shape_t *shp )
 	int		fs[CURVED_FACE_MAX_POINTS];
 
 	if ( shp->tess_name != ShapeTesselation_curved_face )
-		Error( "tess_name invalid\n" );
+		__error( "tess_name invalid\n" );
 
 	if ( shp->norm[0] == 0 &&
 	     shp->norm[1] == 0 &&
 	     shp->norm[2] == 0 )
-		Error( "missing plane hint\n" );
+		__error( "missing plane hint\n" );
 	
 	if ( shp->vnum != 1 )
-		Error( "invalid v order\n" );
+		__error( "invalid v order\n" );
 
 	if ( shp->unum <= 0 )
-		Error( "invalid u order\n" );
+		__error( "invalid u order\n" );
 
 	if ( shp->unum != U_ListLength( shp->cp_list ) )
-		Error( "control point inconsitancy\n" );
+		__error( "control point inconsitancy\n" );
 
 	// fixme: lod init
 	if ( shp->u_lod == 0 )
@@ -186,10 +186,10 @@ void Tess_CreateMesh_curved_face( shape_t *shp )
 	for ( ; ( cp = (shape_ctrl_point_t *)U_ListIterNext( &iter ) ) ; )
 	{
 		if ( cp->u < 0 || cp->u > pnum-1 || cp->v != 0 )
-			Error( "invalid control point\n" );
+			__error( "invalid control point\n" );
 
 		if ( fs[cp->u] != CURVED_FACE_FLAGS_NONE )
-			Error( "dublicated control points\n" );
+			__error( "dublicated control points\n" );
 
 		fs[cp->u] |= CURVED_FACE_FLAGS_USED;
 		Vec3dCopy( pts[cp->u], cp->p );

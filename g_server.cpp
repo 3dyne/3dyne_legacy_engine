@@ -71,7 +71,7 @@ void G_InitServer( g_server_t *sv )
 		sprintf( sv->lib.name, "sv" );
 		if ( G_LibLoad( &sv->lib ) )
 		{
-			Error( "can't load server dll\n" );			
+			__error( "can't load server dll\n" );			
 		}
 
 		sv->lib.api.Init();
@@ -88,7 +88,7 @@ void G_InitServer( g_server_t *sv )
 	}
 	else
 	{
-		Error( "shvar 'gc_servermode' is invalide\n" );
+		__error( "shvar 'gc_servermode' is invalide\n" );
 	}
 
 	G_ServerResetInput( sv );
@@ -122,7 +122,7 @@ void G_CleanUpServer( g_server_t *sv )
 	}
 	else
 	{
-		Error( "unknown server mode\n" );
+		__error( "unknown server mode\n" );
 	}
 
 	sv->state = gServerState_none;
@@ -322,7 +322,7 @@ void G_ServerRunFrame( g_server_t *sv )
 	}
 	else
 	{
-		Error( "unknown server mode\n" );
+		__error( "unknown server mode\n" );
 	}
 
 	//

@@ -555,7 +555,7 @@ void X_CacheCheckMem( x_cache_t *cache, int want_mem )
 
 		if ( i == X_CACHE_NUM_ENTRY )
 		{
-			Error( "can't reach cache->lowwater_mem\n" );
+			__error( "can't reach cache->lowwater_mem\n" );
 		}
 
 //		printf( "reached lowwater at %.2f KB\n", cache->data_mem/1024.0 );

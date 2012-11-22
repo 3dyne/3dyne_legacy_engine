@@ -169,10 +169,10 @@ void	Layer_AddRotate( fp_t angle )
 	y[1] = c;		
 
 	if ( ! ( layer_mode & LayerMode_projection ) )
-		Error( "request for projectiv transformation in none projectiv layer\n" );
+		__error( "request for projectiv transformation in none projectiv layer\n" );
 
 	if ( layer_transformation_num >= MAX_LAYER_TRANSFORMATIONS )
-		Error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
+		__error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
 
 	layer_transformations[layer_transformation_num].type = LAYER_FLAGS_TRANSFORMATION_AXIS;
 	Vec2dCopy( layer_transformations[layer_transformation_num].v[0], x );
@@ -192,10 +192,10 @@ void	Layer_AddRotate( fp_t angle )
 void	Layer_AddAxis( vec2d_t x, vec2d_t y )
 {
 	if ( ! ( layer_mode & LayerMode_projection ) )
-		Error( "request for projectiv transformation in none projectiv layer\n" );
+		__error( "request for projectiv transformation in none projectiv layer\n" );
 
 	if ( layer_transformation_num >= MAX_LAYER_TRANSFORMATIONS )
-		Error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
+		__error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
 
 	layer_transformations[layer_transformation_num].type = LAYER_FLAGS_TRANSFORMATION_AXIS;
 	Vec2dCopy( layer_transformations[layer_transformation_num].v[0], x );
@@ -214,10 +214,10 @@ void	Layer_AddAxis( vec2d_t x, vec2d_t y )
 void Layer_AddScale( vec2d_t scale )
 {
 	if ( ! ( layer_mode & LayerMode_projection ) )
-		Error( "request for projectiv transformation in none projectiv layer\n" );
+		__error( "request for projectiv transformation in none projectiv layer\n" );
 
 	if ( layer_transformation_num >= MAX_LAYER_TRANSFORMATIONS )
-		Error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
+		__error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
 
 	layer_transformations[layer_transformation_num].type = LAYER_FLAGS_TRANSFORMATION_SCALE;
 	Vec2dCopy( layer_transformations[layer_transformation_num].v[0], scale );
@@ -235,10 +235,10 @@ void Layer_AddScale( vec2d_t scale )
 void Layer_AddShift( vec2d_t shift )
 {
 	if ( ! ( layer_mode & LayerMode_projection ) )
-		Error( "request for projectiv transformation in none projectiv layer\n" );
+		__error( "request for projectiv transformation in none projectiv layer\n" );
 
 	if ( layer_transformation_num >= MAX_LAYER_TRANSFORMATIONS )
-		Error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
+		__error( "reached MAX_LAYER_TRANSFORMATIONS\n" );
 
 	layer_transformations[layer_transformation_num].type = LAYER_FLAGS_TRANSFORMATION_SHIFT;
 	Vec2dCopy( layer_transformations[layer_transformation_num].v[0], shift );
@@ -257,7 +257,7 @@ void Layer_AddShift( vec2d_t shift )
 void Layer_SetUVCtrl( vec2d_t cps[4] )
 {
 	if ( ! ( layer_mode & LayerMode_uv ) )
-		Error( "try to set uv control points in none uv layer\n" );
+		__error( "try to set uv control points in none uv layer\n" );
 
 	memcpy( layer_cps, cps, 4*sizeof(vec2d_t) );
 	layer_cps_valid = true;
@@ -339,14 +339,14 @@ layer_t * Layer_EndInstance( void )
 	else if ( layer_mode & LayerMode_uv )
 		flags |= LAYER_FLAGS_MODE_UV;
 	else
-		Error( "no texcoord generation type\n" );
+		__error( "no texcoord generation type\n" );
 	
 	if ( layer_mode & LayerMode_Texel01 )
 		flags |= LAYER_FLAGS_MODE_TEXEL01;
 	else if ( layer_mode & LayerMode_Texel0N )
 		flags |= LAYER_FLAGS_MODE_TEXEL0N;
 	else
-		Error( "no texcoord access type\n" );
+		__error( "no texcoord access type\n" );
 	
 	if ( layer_mode & LayerMode_projection )
 	{
@@ -357,14 +357,14 @@ layer_t * Layer_EndInstance( void )
 		else if ( layer_projection == LayerProjection_z )
 			flags |= LAYER_FLAGS_PROJECTION_Z;
 		else
-			Error( "projectiv layer without valid projection plane\n" );
+			__error( "projectiv layer without valid projection plane\n" );
 	}
 
 	layer->flags = flags;
 	
 	// layer source
 	if ( !layer_source )
-		Error( "(null) layer texture source\n" );
+		__error( "(null) layer texture source\n" );
 	
 	layer->real_source = layer_source;
 
@@ -384,13 +384,13 @@ layer_t * Layer_EndInstance( void )
 
 	// layer glstate
 	if ( !layer_glstate )
-		Error( "(null) layer glstate\n" );
+		__error( "(null) layer glstate\n" );
 	
 	layer->glstate = layer_glstate;
 
 	// layer ordinal
 	if ( layer_ordinal == -1 )
-		Error( "(-1) layer ordinal\n" );
+		__error( "(-1) layer ordinal\n" );
 	
 	layer->ordinal = layer_ordinal;
 
@@ -429,7 +429,7 @@ layer_t * Layer_EndInstance( void )
 		// uv layer
 		
 		if ( layer_cps_valid == false )
-			Error( "(null) uv control points\n" );
+			__error( "(null) uv control points\n" );
 
 		for ( i = 0; i < 4; i++ )
 		{

@@ -89,10 +89,11 @@ void GL_GetInfo( gl_info_t *info ) // fill malloced struct
 	GL_GetSpecialInfo( info );
 	
 }
-
+#ifndef GL_LINKED
 extern "C" {
 void oldc_ghetto_load_gl( int );
 }
+#endif
 
 void GL_LoadGLApi( char *name )
 {

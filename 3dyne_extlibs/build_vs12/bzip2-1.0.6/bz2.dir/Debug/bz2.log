@@ -1,0 +1,41 @@
+﻿Build started 11/22/2012 1:06:21 PM.
+     1>Project "C:\src\3dyne_extlibs\build_vs12\bzip2-1.0.6\bz2.vcxproj" on node 2 (Build target(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/src/3dyne_extlibs/bzip2-1.0.6/CMakeLists.txt
+         CMake does not need to re-run because C:\src\3dyne_extlibs\build_vs12\bzip2-1.0.6\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"bz2.dir\Debug\\" /Fd"C:/src/3dyne_extlibs/build_vs12/bzip2-1.0.6/Debug/bz2.pdb" /Gd /TC /analyze- /errorReport:prompt  /Zm1000 "..\..\bzip2-1.0.6\blocksort.c" "..\..\bzip2-1.0.6\huffman.c" "..\..\bzip2-1.0.6\crctable.c" "..\..\bzip2-1.0.6\randtable.c" "..\..\bzip2-1.0.6\compress.c" "..\..\bzip2-1.0.6\decompress.c" "..\..\bzip2-1.0.6\bzlib.c"
+         blocksort.c
+         huffman.c
+         crctable.c
+         randtable.c
+         compress.c
+         decompress.c
+         bzlib.c
+     1>..\..\bzip2-1.0.6\bzlib.c(1417): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\string.h(115) : see declaration of 'strcat'
+     1>..\..\bzip2-1.0.6\bzlib.c(1418): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\string.h(115) : see declaration of 'strcat'
+     1>..\..\bzip2-1.0.6\bzlib.c(1423): warning C4996: 'setmode': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _setmode. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\io.h(317) : see declaration of 'setmode'
+     1>..\..\bzip2-1.0.6\bzlib.c(1423): warning C4996: 'fileno': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _fileno. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(711) : see declaration of 'fileno'
+     1>..\..\bzip2-1.0.6\bzlib.c(1425): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(218) : see declaration of 'fopen'
+     1>..\..\bzip2-1.0.6\bzlib.c(1431): warning C4996: 'fdopen': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _fdopen. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(709) : see declaration of 'fdopen'
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\src\3dyne_extlibs\build_vs12\bzip2-1.0.6\Debug\bz2.lib" /NOLOGO bz2.dir\Debug\blocksort.obj
+         bz2.dir\Debug\huffman.obj
+         bz2.dir\Debug\crctable.obj
+         bz2.dir\Debug\randtable.obj
+         bz2.dir\Debug\compress.obj
+         bz2.dir\Debug\decompress.obj
+         bz2.dir\Debug\bzlib.obj
+         bz2.vcxproj -> C:\src\3dyne_extlibs\build_vs12\bzip2-1.0.6\Debug\bz2.lib
+     1>Done Building Project "C:\src\3dyne_extlibs\build_vs12\bzip2-1.0.6\bz2.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.99

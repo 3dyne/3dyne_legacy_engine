@@ -1,0 +1,120 @@
+﻿Build started 11/22/2012 1:07:40 PM.
+     1>Project "C:\src\3dyne_extlibs\build_vs12\jpeg-6b\jpeg.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"jpeg.dir\Debug\\" /Fd"C:/src/3dyne_extlibs/build_vs12/jpeg-6b/Debug/jpeg.pdb" /Gd /TC /analyze- /errorReport:prompt  /Zm1000 "..\..\jpeg-6b\jcapimin.c" "..\..\jpeg-6b\jcapistd.c" "..\..\jpeg-6b\jccoefct.c" "..\..\jpeg-6b\jccolor.c" "..\..\jpeg-6b\jcdctmgr.c" "..\..\jpeg-6b\jchuff.c" "..\..\jpeg-6b\jcinit.c" "..\..\jpeg-6b\jcmainct.c" "..\..\jpeg-6b\jcmarker.c" "..\..\jpeg-6b\jcmaster.c" "..\..\jpeg-6b\jcomapi.c" "..\..\jpeg-6b\jcparam.c" "..\..\jpeg-6b\jcphuff.c" "..\..\jpeg-6b\jcprepct.c" "..\..\jpeg-6b\jcsample.c" "..\..\jpeg-6b\jctrans.c" "..\..\jpeg-6b\jdapimin.c" "..\..\jpeg-6b\jdapistd.c" "..\..\jpeg-6b\jdatadst.c" "..\..\jpeg-6b\jdatasrc.c" "..\..\jpeg-6b\jdcoefct.c" "..\..\jpeg-6b\jdcolor.c" "..\..\jpeg-6b\jddctmgr.c" "..\..\jpeg-6b\jdhuff.c" "..\..\jpeg-6b\jdinput.c" "..\..\jpeg-6b\jdmainct.c" "..\..\jpeg-6b\jdmarker.c" "..\..\jpeg-6b\jdmaster.c" "..\..\jpeg-6b\jdmerge.c" "..\..\jpeg-6b\jdphuff.c" "..\..\jpeg-6b\jdpostct.c" "..\..\jpeg-6b\jdsample.c" "..\..\jpeg-6b\jdtrans.c" "..\..\jpeg-6b\jerror.c" "..\..\jpeg-6b\jfdctflt.c" "..\..\jpeg-6b\jfdctfst.c" "..\..\jpeg-6b\jfdctint.c" "..\..\jpeg-6b\jidctflt.c" "..\..\jpeg-6b\jidctfst.c" "..\..\jpeg-6b\jidctint.c" "..\..\jpeg-6b\jidctred.c" "..\..\jpeg-6b\jquant1.c" "..\..\jpeg-6b\jquant2.c" "..\..\jpeg-6b\jutils.c" "..\..\jpeg-6b\jmemmgr.c" "..\..\jpeg-6b\jmemansi.c"
+         jcapimin.c
+         jcapistd.c
+         jccoefct.c
+         jccolor.c
+         jcdctmgr.c
+         jchuff.c
+         jcinit.c
+         jcmainct.c
+         jcmarker.c
+         jcmaster.c
+         jcomapi.c
+         jcparam.c
+         jcphuff.c
+         jcprepct.c
+         jcsample.c
+         jctrans.c
+         jdapimin.c
+         jdapistd.c
+         jdatadst.c
+         jdatasrc.c
+         Generating Code...
+         Compiling...
+         jdcoefct.c
+         jdcolor.c
+         jddctmgr.c
+         jdhuff.c
+         jdinput.c
+         jdmainct.c
+         jdmarker.c
+         jdmaster.c
+         jdmerge.c
+         jdphuff.c
+         jdpostct.c
+         jdsample.c
+         jdtrans.c
+         jerror.c
+     1>..\..\jpeg-6b\jerror.c(193): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(357) : see declaration of 'sprintf'
+     1>..\..\jpeg-6b\jerror.c(199): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(357) : see declaration of 'sprintf'
+         jfdctflt.c
+         jfdctfst.c
+         jfdctint.c
+         jidctflt.c
+         jidctfst.c
+         jidctint.c
+         Generating Code...
+         Compiling...
+         jidctred.c
+         jquant1.c
+         jquant2.c
+         jutils.c
+         jmemmgr.c
+     1>..\..\jpeg-6b\jmemmgr.c(1106): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdlib.h(449) : see declaration of 'getenv'
+     1>..\..\jpeg-6b\jmemmgr.c(1109): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(311) : see declaration of 'sscanf'
+         jmemansi.c
+     1>..\..\jpeg-6b\jmemansi.c(144): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\stdio.h(324) : see declaration of 'tmpfile'
+     1>..\..\jpeg-6b\jmemansi.c(145): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\string.h(191) : see declaration of 'strncpy'
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\Lib.exe /OUT:"C:\src\3dyne_extlibs\build_vs12\jpeg-6b\Debug\jpeg.lib" /NOLOGO jpeg.dir\Debug\jcapimin.obj
+         jpeg.dir\Debug\jcapistd.obj
+         jpeg.dir\Debug\jccoefct.obj
+         jpeg.dir\Debug\jccolor.obj
+         jpeg.dir\Debug\jcdctmgr.obj
+         jpeg.dir\Debug\jchuff.obj
+         jpeg.dir\Debug\jcinit.obj
+         jpeg.dir\Debug\jcmainct.obj
+         jpeg.dir\Debug\jcmarker.obj
+         jpeg.dir\Debug\jcmaster.obj
+         jpeg.dir\Debug\jcomapi.obj
+         jpeg.dir\Debug\jcparam.obj
+         jpeg.dir\Debug\jcphuff.obj
+         jpeg.dir\Debug\jcprepct.obj
+         jpeg.dir\Debug\jcsample.obj
+         jpeg.dir\Debug\jctrans.obj
+         jpeg.dir\Debug\jdapimin.obj
+         jpeg.dir\Debug\jdapistd.obj
+         jpeg.dir\Debug\jdatadst.obj
+         jpeg.dir\Debug\jdatasrc.obj
+         jpeg.dir\Debug\jdcoefct.obj
+         jpeg.dir\Debug\jdcolor.obj
+         jpeg.dir\Debug\jddctmgr.obj
+         jpeg.dir\Debug\jdhuff.obj
+         jpeg.dir\Debug\jdinput.obj
+         jpeg.dir\Debug\jdmainct.obj
+         jpeg.dir\Debug\jdmarker.obj
+         jpeg.dir\Debug\jdmaster.obj
+         jpeg.dir\Debug\jdmerge.obj
+         jpeg.dir\Debug\jdphuff.obj
+         jpeg.dir\Debug\jdpostct.obj
+         jpeg.dir\Debug\jdsample.obj
+         jpeg.dir\Debug\jdtrans.obj
+         jpeg.dir\Debug\jerror.obj
+         jpeg.dir\Debug\jfdctflt.obj
+         jpeg.dir\Debug\jfdctfst.obj
+         jpeg.dir\Debug\jfdctint.obj
+         jpeg.dir\Debug\jidctflt.obj
+         jpeg.dir\Debug\jidctfst.obj
+         jpeg.dir\Debug\jidctint.obj
+         jpeg.dir\Debug\jidctred.obj
+         jpeg.dir\Debug\jquant1.obj
+         jpeg.dir\Debug\jquant2.obj
+         jpeg.dir\Debug\jutils.obj
+         jpeg.dir\Debug\jmemmgr.obj
+         jpeg.dir\Debug\jmemansi.obj
+         jpeg.vcxproj -> C:\src\3dyne_extlibs\build_vs12\jpeg-6b\Debug\jpeg.lib
+     1>Done Building Project "C:\src\3dyne_extlibs\build_vs12\jpeg-6b\jpeg.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.25

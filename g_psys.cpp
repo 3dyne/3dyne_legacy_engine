@@ -46,6 +46,11 @@
 #include "lib_psys.h"
 #include "g_psys.h"
 
+#ifdef win32_x86
+inline int rint(float x){
+ return (x+0.5);
+}
+#endif
 /*
   =============================================================================
   generic particle systems

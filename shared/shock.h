@@ -48,8 +48,8 @@ extern "C" {
 #endif
 
 	
-#define Error __error
-#define ChkPtr __chkptr
+//#define Error __error
+//#define ChkPtr __chkptr
 
 // #ifdef __cplusplus
 // extern "C"

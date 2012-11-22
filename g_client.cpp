@@ -69,7 +69,7 @@ void G_InitClient( g_client_t *cl )
 	sprintf( cl->lib.name, "cl" );
 	if ( G_LibLoad( &cl->lib ) )
 	{
-		Error( "can't load client dll\n" );
+		__error( "can't load client dll\n" );
 	}
 	cl->lib.api.Init();
 

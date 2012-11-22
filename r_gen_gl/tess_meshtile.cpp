@@ -60,16 +60,16 @@ void Tess_CreateMesh_meshtile( shape_t *shp )
 	mesh_t		*mesh;
 
 	if ( shp->tess_name != ShapeTesselation_meshtile )
-		Error( "tess_name is not ShapeTesselation_meshtile\n" );
+		__error( "tess_name is not ShapeTesselation_meshtile\n" );
 
 	if ( shp->vnum != 1 )
-		Error( "invalid v order\n" );
+		__error( "invalid v order\n" );
 
 	if ( shp->unum < 3 )
-		Error( "invalid u order\n" );
+		__error( "invalid u order\n" );
 
 	if ( shp->unum != U_ListLength( shp->cp_list ) )
-		Error( "control point inconsitancy\n" );
+		__error( "control point inconsitancy\n" );
 
 	{
 		int		i;

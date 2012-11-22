@@ -40,7 +40,7 @@
 #include <windows.h>
 
 #ifdef vgl_notextern
-#warning vgl_notextern
+//#warning vgl_notextern
 #undef GLAPI
 #define GLAPI
 #else

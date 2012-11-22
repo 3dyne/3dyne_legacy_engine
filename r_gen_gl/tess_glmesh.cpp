@@ -71,10 +71,10 @@ void Tess_CreateMesh_glmesh( shape_t *shp )
 	int		i;
 
 	if ( shp->tess_name != ShapeTesselation_glmesh )
-		Error( "tess_name is not ShapeTesselation_meshtile\n" );
+		__error( "tess_name is not ShapeTesselation_meshtile\n" );
 	
 	if ( !(shp->flags & SHAPE_FLAGS_HAVE_GLMESH) )
-		Error( "missing flag SHAPE_FLAGS_HAVE_GLMESH\n" );
+		__error( "missing flag SHAPE_FLAGS_HAVE_GLMESH\n" );
 
 	__chkptr( shp->glmesh_obj );
 	__chkptr( shp->glmesh_base );

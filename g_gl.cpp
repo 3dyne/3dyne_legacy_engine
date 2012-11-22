@@ -34,7 +34,7 @@
 
 // gameloop.c
 
-#include <sys/time.h> // win32 port will be a problem!
+//#include <sys/time.h> // win32 port will be a problem!
 #include "interfaces.h"
 
 void timer()

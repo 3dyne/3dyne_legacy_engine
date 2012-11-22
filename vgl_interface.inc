@@ -1,3 +1,5 @@
+#if 0
+
 vgl_field_t	vgl_fields[] = {
 	{ "glClearIndex", 	( void ** )&vglClearIndex },
 	{ "glClearColor", 	( void ** ) &vglClearColor },
@@ -815,3 +817,4 @@ vgl_field_t	vgl_fields[] = {
 	{ "glCopyColorTable", 	( void ** ) &glCopyColorTable },
 	{ NULL, NULL }
 };
+#endif

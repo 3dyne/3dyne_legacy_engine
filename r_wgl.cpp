@@ -82,6 +82,7 @@ volatile unsigned int	testvar = 0;
 
 void VGL_ResolveAPI()
 {
+#if 0
 	int	i;
 	for( i = 0; ; i++ )
 	{
@@ -102,6 +103,7 @@ void VGL_ResolveAPI()
 		}
 	}
 	__message( "\t\tgl api loaded\n" );
+#endif
 }
 
 
@@ -146,11 +148,11 @@ static void VGL_ResolveExt( void )
 	{
 		__named_message( "\tloading ARB_MULTITEXTURE\n" );
 
-		vglActiveTextureARB = vwglGetProcAddress( "glActiveTextureARB" );
-		vglClientActiveTextureARB = vwglGetProcAddress( "glClientActiveTextureARB" );
+		vglActiveTextureARB = (vglActiveTextureARB_t)vwglGetProcAddress( "glActiveTextureARB" );
+		vglClientActiveTextureARB = (vglClientActiveTextureARB_t)vwglGetProcAddress( "glClientActiveTextureARB" );
 
-		vglMultiTexCoord2fARB = vwglGetProcAddress( "glMultiTexCoord2fARB" );
-		vglMultiTexCoord2fvARB = vwglGetProcAddress( "glMultiTexCoord2fvARB" );
+		vglMultiTexCoord2fARB = (vglMultiTexCoord2fARB_t) vwglGetProcAddress( "glMultiTexCoord2fARB" );
+		vglMultiTexCoord2fvARB = (vglMultiTexCoord2fvARB_t) vwglGetProcAddress( "glMultiTexCoord2fvARB" );
 
 		__chkptr( vglActiveTextureARB );
 		__chkptr( vglClientActiveTextureARB );
@@ -202,8 +204,11 @@ static void VGL_GetInfo( gl_info_t *info ) // fill malloced struct
 void R_StartUp( void )
 {
 #if 1
+
+#ifdef linux_i386
 	asm( "movl %esp, _testvar\n" );
 	fprintf( stderr, "esp: %x\n", testvar );
+#endif
 
 	TFUNC_ENTER;
 	r_gldriver = SHP_GetVar( "r_gldriver_win32" );
@@ -222,10 +227,10 @@ void R_StartUp( void )
 	__chkptr( vwglDeleteContext );
 	__chkptr( vwglMakeCurrent );
 
-	if( !vglBegin || !vglVertex3f )
-	  {
-	    __error( "gl api is fucked up. This happens on windows sometimes. plaease try running again!\n" );
-	  }
+//	#if( !vglBegin || !vglVertex3f )
+	//  {
+	 //   __error( "gl api is fucked up. This happens on windows sometimes. plaease try running again!\n" );
+	//  }
 	
 
 //	InitializeCriticalSection( csection );
@@ -409,7 +414,7 @@ void R_WindowStartUp()
 	wndClass.hInstance = g_wininstance;
 	wndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wndClass.hbrBackground = GetStockObject(BLACK_BRUSH);
+	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wndClass.lpszMenuName = NULL;
 	wndClass.lpszClassName = className;
 	RegisterClass(&wndClass);
@@ -605,11 +610,11 @@ void R_Hint( int hint )
 	{
 	case R_HINT_GRAB_MOUSE:
 		I_GrabMouse( 1 );
-		SetCursor( LoadCursor( g_hWnd, IDC_NO ));
+		SetCursor( LoadCursor( (HINSTANCE)g_hWnd, IDC_NO ));
 		break;
 	case R_HINT_UNGRAB_MOUSE:
 		I_GrabMouse( 0 );
-		SetCursor( LoadCursor( g_hWnd, IDC_ARROW ));
+		SetCursor( LoadCursor( (HINSTANCE)g_hWnd, IDC_ARROW ));
 		break;
 	default:
 		__warning( "unsuported render hint\n" );

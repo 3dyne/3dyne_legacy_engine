@@ -34,7 +34,7 @@
 
 // sst_sdl.c
 
-#if 1
+#if 0
 #include <SDL/SDL.h>
 #include "interfaces.h"
 #include "snd_intern.h"
@@ -216,11 +216,13 @@ void SST_Unlock( void )
 	SDL_UnlockAudio();
 }
 #else
+#include <cstdio>
+#include "snd_intern.h"
 
-
-int SST_StartUp( void *spec )
+int SST_StartUp( sst_spec_t *spec )
 {
 	printf( "dummy sound driver\n" );
+	return 0;
 }
 
 void SST_ShutDown()

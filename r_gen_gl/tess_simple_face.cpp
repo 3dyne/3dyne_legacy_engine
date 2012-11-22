@@ -179,10 +179,10 @@ void Tess_SimpleFace_CalcBoundBox( shape_t *shp )
 	int		i;
 
 	if ( shp->tess_name != ShapeTesselation_simple_face )
-		Error( "tess_name %d is invalid\n", shp->tess_name );
+		__error( "tess_name %d is invalid\n", shp->tess_name );
 
 	if ( !shp->mesh )
-		Error( "(null) mesh\n" );
+		__error( "(null) mesh\n" );
 
 	Mesh_GetVec3dBase( shp->mesh, 0, &vnum, &verts );
 	U_VACalcBB( verts, vnum, shp->min, shp->max );
@@ -213,16 +213,16 @@ void Tess_CreateMesh_simple_face( shape_t *shp )
 	int			fs[SIMPLE_FACE_MAX_POINTS];
 
 	if ( shp->tess_name != ShapeTesselation_simple_face )
-		Error( "tess_name %d is invalid\n", shp->tess_name );
+		__error( "tess_name %d is invalid\n", shp->tess_name );
 
 	if ( shp->vnum != 1 )
-		Error( "invalid v order\n" );
+		__error( "invalid v order\n" );
 
 	if ( shp->unum <= 0 )
-		Error( "invalid u order\n" );
+		__error( "invalid u order\n" );
 
 	if ( shp->unum != U_ListLength( shp->cp_list ) )
-		Error( "control point inconsitancy\n" );
+		__error( "control point inconsitancy\n" );
 
 	// unum seems to be valid
 	pnum = shp->unum;
@@ -235,10 +235,10 @@ void Tess_CreateMesh_simple_face( shape_t *shp )
 	for ( ; ( cp = (shape_ctrl_point_t *)U_ListIterNext( &iter ) ) ; )
 	{
 		if ( cp->u < 0 || cp->u > pnum-1 || cp->v != 0 )
-			Error( "invalid control point\n" );
+			__error( "invalid control point\n" );
 
 		if ( fs[cp->u] != SIMPLE_FACE_FLAGS_NONE )
-			Error( "dublicated control points\n" );
+			__error( "dublicated control points\n" );
 
 		fs[cp->u] |= SIMPLE_FACE_FLAGS_USED;
 		Vec3dCopy( pts[cp->u], cp->p );

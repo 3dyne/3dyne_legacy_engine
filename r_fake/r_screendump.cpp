@@ -35,7 +35,8 @@
 // r_screendump.c
 
 #include <math.h>
-#include <alloca.h>
+#include <vector>
+//#include <alloca.h>
 
 #include "r_interfaces.h"
 #include "defs.h"
@@ -69,7 +70,9 @@ void R_ScreenDump( const char *name )
  
 	SHV_Printf( "%d x %d", width, height );
 	
-	lfb = (unsigned char *)alloca( width * height * 4 );
+	std::vector<unsigned char> lfb_data(width * height * 4);
+	lfb = lfb_data.data();
+	//lfb = (unsigned char *)alloca( width * height * 4 );
 
 	glReadBuffer( GL_FRONT );
 	glReadPixels( 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, lfb );
@@ -77,7 +80,7 @@ void R_ScreenDump( const char *name )
 
 	h = fopen( name, "w" );
 	if ( !h )
-		Error( "can't open file.\n" );
+		__error( "can't open file.\n" );
 
 	fwrite( header1, 12, 1, h );
 	tmp = width;

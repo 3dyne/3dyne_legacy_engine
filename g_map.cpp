@@ -337,7 +337,7 @@ void G_InitMap( g_map_t *map )
 
 		ts = BeginTokenStream( "shape_config/multilayer.hobj" );
 		if ( !ts )
-			Error( "can't open shape_config/multilayer.hobj" );
+			__error( "can't open shape_config/multilayer.hobj" );
 		root = ReadClass( ts );
 		EndTokenStream( ts );
 

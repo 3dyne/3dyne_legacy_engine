@@ -33,7 +33,8 @@
 
 
 // gc_service.c
-
+typedef int socklen_t;
+#include <winsock2.h>
 #include "interfaces.h"
 
 #include "./r_fake/r_interface.h"
@@ -59,10 +60,11 @@
 #include <arpa/inet.h>
 #include <time.h>
 #else
-#include <winsock.h>
+
+
 #endif 
 
-#include <sys/time.h>                                                           
+//#include <sys/time.h>                                                           
 
 #include <errno.h>
 
@@ -136,7 +138,7 @@ gc_state_t	*gc_state;
 // fixme: sysdep stuff!
 
 #if defined( win32_x86 )
-static gc_wsisup = 0;
+static int gc_wsisup = 0;
 static WSADATA winsockdata;
 #endif
 
@@ -920,7 +922,7 @@ void GC_NetSendFromLocalPort( gc_state_t *state, gc_host_addr_t *host )
 	buf[ofs++] = (chksum&255);	// low
 	buf[ofs++] = (chksum>>8)&255;	// high
 
-	sendto( state->local_sock, buf, ofs, 0, (struct sockaddr *)&host->addr, sizeof(struct sockaddr) );
+	sendto( state->local_sock, (char *)buf, ofs, 0, (struct sockaddr *)&host->addr, sizeof(struct sockaddr) );
 
 	if ( h_sendudp )
 	{

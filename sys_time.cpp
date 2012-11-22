@@ -36,9 +36,10 @@
 
 // support.c
 
-#include <sys/time.h>
+
 
 #if defined(linux_i386) || defined(irix_mips)
+#include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
 #include <time.h>

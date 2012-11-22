@@ -31,9 +31,9 @@
  */
 
 
-
+#ifndef GL_LINKED
 #include "gl_service.h"
-#include "glx_service.h"
+
 #include "sys_dll.h"
 #include "shock.h"
 
@@ -42,6 +42,10 @@ void GL_SymNotFound( char *symname )
 {
     __warning( "could not resolve symbol %s\n", symname );
 }
+
+
+#ifdef linux_i386
+#include "glx_service.h"
 void oldc_ghetto_load_glx( int glx_h ) {
     glXChooseVisual = SYS_DllSym( glx_h, "glXChooseVisual" );
     if( !glXChooseVisual )
@@ -70,6 +74,33 @@ void oldc_ghetto_load_glx( int glx_h ) {
     if( !glXWaitGL )
         __warning( "could not resolve symbol glXWaitGL from GLX lib\n" );   
 }
+#endif
+
+#ifdef win32_x86
+#include "wgl_service.h"
+void oldc_ghetto_load_wgl( int wgl_h ) {
+	_wglCreateContext = SYS_DllSym( wgl_h, "wglCreateContext" );
+	if( !_wglCreateContext )
+		__warning( "could not resolve symbol wglCreateContext from wgl lib\n" );
+
+	_wglDeleteContext = SYS_DllSym( wgl_h, "wglDeleteContext" );
+	if( !_wglDeleteContext )
+		__warning( "could not resolve symbol wglDeleteContext from wgl lib\n" );
+
+	
+	_wglMakeCurrent = SYS_DllSym( wgl_h, "wglMakeCurrent" );
+	if( !_wglMakeCurrent )
+		__warning( "could not resolve symbol wglMakeCurrent from wgl lib\n" );
+#if 0
+	DllInitialize = SYS_DllSym( gl_h, "DllInitialize" );
+	if( !DllInitialize )	
+		__error( "no initialize in dll\n" );
+#endif
+//	DllInitialize();
+
+	
+}
+#endif
 
 void oldc_ghetto_load_gl( int gl_h ) {
     char *symname;
@@ -4085,3 +4116,4 @@ void oldc_ghetto_load_gl( int gl_h ) {
     
     
 }
+#endif

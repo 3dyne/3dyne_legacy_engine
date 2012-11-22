@@ -45,6 +45,7 @@ static char	spacebuf[] = "                                                      
 
 void TF_LogEnter()
 {
+#ifdef linux_i386
 	if( log_h == -1 )
 	{
 		log_h = open( "./func.log", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP );
@@ -56,6 +57,7 @@ void TF_LogEnter()
 	write( log_h, tf_names[tf_level], strlen( tf_names[tf_level] ) );
 	write( log_h, "\n", 1 );
 //	fsync( log_h );
+#endif
 }
 
 

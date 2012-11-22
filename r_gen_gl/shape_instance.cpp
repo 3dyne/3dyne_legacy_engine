@@ -67,7 +67,7 @@ static shape_t		*shape_tmp = NULL;
 void Shape_BeginInstance( void )
 {
 	if ( shape_in_instance == true )
-		Error( "already in instance\n" );
+		__error( "already in instance\n" );
 
 	shape_in_instance = true;
 	shape_tmp = NEWTYPE( shape_t );
@@ -198,15 +198,15 @@ shape_t * Shape_EndInstance( void )
 	shape_t		*ret;
 
 	if ( !( shape_tmp->flags & SHAPE_FLAGS_HAVE_TESSELATION ) )
-		Error( "missing SHAPE_FLAGS_HAVE_TESSELATION\n" );
+		__error( "missing SHAPE_FLAGS_HAVE_TESSELATION\n" );
 	if ( !( shape_tmp->flags & SHAPE_FLAGS_HAVE_CTRLNUM ) && !(shape_tmp->flags & SHAPE_FLAGS_HAVE_GLMESH) )
-		Error( "missing SHAPE_FLAGS_HAVE_CTRLNUM\n" );
+		__error( "missing SHAPE_FLAGS_HAVE_CTRLNUM\n" );
 	if ( !( shape_tmp->flags & SHAPE_FLAGS_HAVE_PRIMARY_KEY ) )
 		__warning( "shape ain't got a valid primary key\n" );
 
 
 	if ( shape_in_instance == false )
-		Error( "no new instance\n" );
+		__error( "no new instance\n" );
 	shape_in_instance = false;
 
 	ret = shape_tmp;

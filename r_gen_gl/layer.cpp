@@ -79,7 +79,7 @@ void Layer_CreateTexCoord_projection( layer_t *layer, vec3d_t in, vec2d_t out )
 	}
 	else
 	{
-		Error( "invalid projection plane\n" );
+		__error( "invalid projection plane\n" );
 	}
 	
 	U_BeginMemUnpack( layer->packed_info );		// fixme: missing U_EndMemUnpack() ...
@@ -124,7 +124,7 @@ void Layer_CreateTexCoord_projection( layer_t *layer, vec3d_t in, vec2d_t out )
 		}
 		else 
 		{
-			Error( "invalid projectiv transformation\n" );
+			__error( "invalid projectiv transformation\n" );
 		}
 	}
 	
@@ -188,7 +188,7 @@ void Layer_CreateTexCoords_projection( layer_t *layer, mesh_t *mesh )
 		}
 		else 
 		{
-			Error( "invalid projection plane\n" );
+			__error( "invalid projection plane\n" );
 		}
 
 		Vec2dCopy( m_tc[i], v2 );
@@ -247,7 +247,7 @@ void Layer_CreateTexCoords_projection( layer_t *layer, mesh_t *mesh )
 		}
 		else 
 		{
-			Error( "invalid projectiv transformation\n" );
+			__error( "invalid projectiv transformation\n" );
 		}
 	}
 
@@ -262,7 +262,7 @@ void Layer_CreateTexCoords_projection( layer_t *layer, mesh_t *mesh )
 		else if ( layer->flags & LAYER_FLAGS_MODE_TEXEL01 )
 			UniTex_RealTexCoord_01( layer->real_source, m_tc[i], tmp );
 		else
-			Error( "unknown texcoord access type\n" );
+			__error( "unknown texcoord access type\n" );
 	}
 
 	if ( layer->tc )
@@ -325,7 +325,7 @@ void Layer_CreateTexCoords_projection_with_stack( layer_t *layer, mesh_t *mesh )
 		}
 		else 
 		{
-			Error( "invalid projection plane\n" );
+			__error( "invalid projection plane\n" );
 		}
 
 		Vec2dCopy( m_tc[i], v2 );
@@ -347,7 +347,7 @@ void Layer_CreateTexCoords_projection_with_stack( layer_t *layer, mesh_t *mesh )
 		else if ( layer->flags & LAYER_FLAGS_MODE_TEXEL01 )
 			UniTex_RealTexCoord_01( layer->real_source, m_tc[i], tmp );
 		else
-			Error( "unknown texcoord access type\n" );
+			__error( "unknown texcoord access type\n" );
 	}
 
 	if ( layer->tc )
@@ -418,7 +418,7 @@ void Layer_CreateTexCoords_uv( layer_t *layer, mesh_t *mesh )
 		else if ( layer->flags & LAYER_FLAGS_MODE_TEXEL01 )
 			UniTex_RealTexCoord_01( layer->real_source, m_tc[i], v );
 		else
-			Error( "unknown texcoord access type\n" );		
+			__error( "unknown texcoord access type\n" );		
 	}
 
 	if ( layer->tc )
@@ -437,7 +437,7 @@ void Layer_CreateTexCoords( layer_t *layer, mesh_t *mesh )
 {
 	if ( !mesh )
 	{
-		Error( "(null) mesh\n" );
+		__error( "(null) mesh\n" );
 	}
 
 	// fixme: is it really a job that should be done here
@@ -463,7 +463,7 @@ void Layer_CreateTexCoords( layer_t *layer, mesh_t *mesh )
 	}
 	else
 	{
-		Error( "Layer_CreateTexCoords: no valid layer mode\n" );
+		__error( "Layer_CreateTexCoords: no valid layer mode\n" );
 	}
 }
 

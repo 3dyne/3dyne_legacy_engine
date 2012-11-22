@@ -46,7 +46,7 @@ void TF_FuncHistory( char *, int );
 void TF_LastFunction( char *, int );
 
 #if !defined( __GNUC__ )
-#warning trace func will only work on a GNU C compiler!
+//#warning trace func will only work on a GNU C compiler!
 #endif
 
 #endif

@@ -41,6 +41,8 @@
 #define printf  S_Printf                                                        
 #define Error   __error
 
+#define __inline__ inline
+
 /*
   ==================================================
   double linked node

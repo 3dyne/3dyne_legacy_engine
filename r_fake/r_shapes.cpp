@@ -214,7 +214,7 @@ void R_SetupSFaceLayer( hobj_t *texdef, hobj_t *layer )
 
 	pair = FindHPair( layer, "sfactor" );
 	if ( !pair )
-		Error( "missing key 'sfactor'\n" );
+		__error( "missing key 'sfactor'\n" );
 
 	if ( !strcmp( pair->value, "GL_ONE" ) )
 	{
@@ -234,7 +234,7 @@ void R_SetupSFaceLayer( hobj_t *texdef, hobj_t *layer )
 	}
 	else
 	{
-		Error( "unknown sfactor '%s'\n", pair->value );
+		__error( "unknown sfactor '%s'\n", pair->value );
 	}
 
 	//
@@ -243,7 +243,7 @@ void R_SetupSFaceLayer( hobj_t *texdef, hobj_t *layer )
 
 	pair = FindHPair( layer, "dfactor" );
 	if ( !pair )
-		Error( "missing key 'dfactor'\n" );
+		__error( "missing key 'dfactor'\n" );
 	
 	if ( !strcmp( pair->value, "GL_ONE" ) )
 	{
@@ -259,7 +259,7 @@ void R_SetupSFaceLayer( hobj_t *texdef, hobj_t *layer )
 	}
 	else
 	{
-		Error( "unknown dfactor '%s'\n", pair->value );
+		__error( "unknown dfactor '%s'\n", pair->value );
 	}
 
 	
@@ -284,7 +284,7 @@ void R_SetupSFaceLayer( hobj_t *texdef, hobj_t *layer )
 	}
 	else
 	{
-		Error( "can't get projection plane\n" );
+		__error( "can't get projection plane\n" );
 	}
 	
 	//
@@ -588,7 +588,7 @@ shape_t * R_SetupSFaceShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}
 		
 		//
@@ -730,7 +730,7 @@ texture_skip:
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{
@@ -844,7 +844,7 @@ texture_skip:
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{
@@ -1027,7 +1027,7 @@ shape_t * R_SetupCFaceShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}
 		
 		//
@@ -1159,7 +1159,7 @@ shape_t * R_SetupCFaceShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{
@@ -1271,7 +1271,7 @@ shape_t * R_SetupCFaceShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{
@@ -1408,7 +1408,7 @@ void R_SetupCSurfLayer( hobj_t *texdef, hobj_t *layer )
 
 	pair = FindHPair( layer, "sfactor" );
 	if ( !pair )
-		Error( "missing key 'sfactor'\n" );
+		__error( "missing key 'sfactor'\n" );
 
 	if ( !strcmp( pair->value, "GL_ONE" ) )
 	{
@@ -1428,7 +1428,7 @@ void R_SetupCSurfLayer( hobj_t *texdef, hobj_t *layer )
 	}
 	else
 	{
-		Error( "unknown sfactor '%s'\n", pair->value );
+		__error( "unknown sfactor '%s'\n", pair->value );
 	}
 
 	//
@@ -1437,7 +1437,7 @@ void R_SetupCSurfLayer( hobj_t *texdef, hobj_t *layer )
 
 	pair = FindHPair( layer, "dfactor" );
 	if ( !pair )
-		Error( "missing key 'dfactor'\n" );
+		__error( "missing key 'dfactor'\n" );
 	
 	if ( !strcmp( pair->value, "GL_ONE" ) )
 	{
@@ -1453,7 +1453,7 @@ void R_SetupCSurfLayer( hobj_t *texdef, hobj_t *layer )
 	}
 	else
 	{
-		Error( "unknown dfactor '%s'\n", pair->value );
+		__error( "unknown dfactor '%s'\n", pair->value );
 	}
 
 	Layer_BeginInstance( (layerMode)(LayerMode_uv | LayerMode_Texel0N) );
@@ -1921,14 +1921,14 @@ shape_t * R_SetupMeshTileShape( hobj_t *shape, g_map_t *map )
 
 	glmesh_obj = FindClassType( shape, "glmesh" );
 	if ( !glmesh_obj )
-		Error( "missing class 'glmesh' in shape '%s'\n", shape->name );
+		__error( "missing class 'glmesh' in shape '%s'\n", shape->name );
 	
 	Shape_SetGLMesh( glmesh_obj, a_map->glmesh );
 
 #if 0
 	meshtile = FindClassType( shape, "meshtile" );
 	if ( !meshtile )
-		Error( "missing class 'meshtile' in shape '%s'\n", shape->name );
+		__error( "missing class 'meshtile' in shape '%s'\n", shape->name );
 
 	EasyFindInt( &trinum, meshtile, "polynum" );
 
@@ -2009,7 +2009,7 @@ shape_t * R_SetupMeshTileShape( hobj_t *shape, g_map_t *map )
 	}
 	else
 	{
-		Error( "can't get projection plane\n" );
+		__error( "can't get projection plane\n" );
 	}
 	
 	//
@@ -2141,7 +2141,7 @@ shape_t * R_SetupMeshTileShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{
@@ -2250,7 +2250,7 @@ shape_t * R_SetupMeshTileShape( hobj_t *shape, g_map_t *map )
 		}
 		else
 		{
-			Error( "can't get projection plane\n" );
+			__error( "can't get projection plane\n" );
 		}		
 
 		{

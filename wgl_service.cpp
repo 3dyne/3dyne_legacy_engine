@@ -44,6 +44,9 @@ static int	wgl_h;
 
 extern int gl_h;
 
+extern "C" {
+void oldc_ghetto_load_wgl( int gl_h );
+}
 void GL_LoadWGLApi( char *name )
 {
 //	wgl_h = SYS_DllBegin( name );
@@ -54,24 +57,7 @@ void GL_LoadWGLApi( char *name )
     return;
 #else
 
-	_wglCreateContext = SYS_DllSym( wgl_h, "wglCreateContext" );
-	if( !_wglCreateContext )
-		__warning( "could not resolve symbol wglCreateContext from wgl lib\n" );
-
-	_wglDeleteContext = SYS_DllSym( wgl_h, "wglDeleteContext" );
-	if( !_wglDeleteContext )
-		__warning( "could not resolve symbol wglDeleteContext from wgl lib\n" );
-
-	
-	_wglMakeCurrent = SYS_DllSym( wgl_h, "wglMakeCurrent" );
-	if( !_wglMakeCurrent )
-		__warning( "could not resolve symbol wglMakeCurrent from wgl lib\n" );
-
-	DllInitialize = SYS_DllSym( gl_h, "DllInitialize" );
-	if( !DllInitialize )	
-		__error( "no initialize in dll\n" );
-//	DllInitialize();
-
+	oldc_ghetto_load_wgl( wgl_h );
 	__named_message( "\nwgl symbols are from %s\n", name );
 #endif
 }	

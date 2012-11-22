@@ -109,7 +109,11 @@ void ShockHandler()
 }
 
 #if defined( win32_x86 )
-LONG win32Exception( struct _EXCEPTION_POINTERS *einfo )
+//typedef LONG (WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
+//    _In_ struct _EXCEPTION_POINTERS *ExceptionInfo
+//    );
+
+LONG WINAPI win32Exception( struct _EXCEPTION_POINTERS *einfo )
 {
 	__warning( "unhandled exception\n" );
 	printf( "exception code: 0x%x\n", einfo->ExceptionRecord->ExceptionCode );
@@ -417,6 +421,8 @@ int g_main( int argc, char* argv[] )
 	signal( SIGINT,  (void(*) (int)) SecureShutDown );
 
 #ifdef win32_x86
+	LPTOP_LEVEL_EXCEPTION_FILTER xxx;
+
 	SetUnhandledExceptionFilter( win32Exception );
 #endif
 
