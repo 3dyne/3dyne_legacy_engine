@@ -42,6 +42,7 @@
 	#include <sys/stat.h> // cygnus
 	#include <sys/types.h>
 	#include <windows.h> // for WinMain
+#include <direct.h>
 HINSTANCE	g_wininstance; // extern defined in r_private.h
 int		g_ncmdshow;
 #endif
@@ -55,6 +56,7 @@ static char 	text[128];
 int main( int argc, char *argv[] )
 {
 	int	ret;
+	_chdir("E:\\src\\dd-0.2-devel-exec");
 	ret = g_main( argc, argv );
 	return ret;
 }

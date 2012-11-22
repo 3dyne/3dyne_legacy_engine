@@ -189,7 +189,7 @@ void SND_StartUp()
 #endif
 
 	MUS_StartUp();
-	MUS_PlayByName( "mp3.test1" );
+	//MUS_PlayByName( "mp3.test1" );
 
 }
 

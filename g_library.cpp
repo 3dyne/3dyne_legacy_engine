@@ -101,9 +101,15 @@ int G_LibLoad( l_library_t *lib )
 		return 1;
 	}
 	
-	sprintf( filename, "dd1/%s", lib->name );
+	
 
+#ifdef win32_x86
+	strcpy( filename, lib->name );
+	SYS_DllAddSuffix( filename, 0 );
+#else
+	sprintf( filename, "dd1/%s", lib->name );
 	SYS_DllAddSuffix( filename, SYS_DLLSSYSTEM );
+#endif
 
 	__named_message( "filename: %s\n", filename );
 

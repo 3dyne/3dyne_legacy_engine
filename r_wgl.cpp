@@ -41,7 +41,7 @@
 #include "version.h"
 #include "vgl_interface.inc"
 
-
+#if 0
 vgl_field_t	vwgl_fields[] = {
 	{ "wglCreateContext", ( void ** )&vwglCreateContext },
 	{ "wglDeleteContext", ( void ** )&vwglDeleteContext },
@@ -52,7 +52,7 @@ vgl_field_t	vwgl_fields[] = {
 	{ "wglSwapBuffers", ( void ** )&vwglSwapBuffers },
 	{ NULL ,NULL }
 };
-
+#endif
 static char	*className = "OpenGL";
 static char	*windowName = "DarkestDays " DD_BTYPE " - " BVERSION;
 
@@ -108,7 +108,7 @@ void VGL_ResolveAPI()
 
 
 
-
+#if 0
 void VWGL_ResolveAPI()
 {
 	int	i;
@@ -133,7 +133,7 @@ void VWGL_ResolveAPI()
 	}
 	__message( "\t\twgl api loaded\n" );
 }
-
+#endif
 static void VGL_ResolveExt( void )
 {
 
@@ -148,11 +148,11 @@ static void VGL_ResolveExt( void )
 	{
 		__named_message( "\tloading ARB_MULTITEXTURE\n" );
 
-		vglActiveTextureARB = (vglActiveTextureARB_t)vwglGetProcAddress( "glActiveTextureARB" );
-		vglClientActiveTextureARB = (vglClientActiveTextureARB_t)vwglGetProcAddress( "glClientActiveTextureARB" );
+		vglActiveTextureARB = (vglActiveTextureARB_t)wglGetProcAddress( "glActiveTextureARB" );
+		vglClientActiveTextureARB = (vglClientActiveTextureARB_t)wglGetProcAddress( "glClientActiveTextureARB" );
 
-		vglMultiTexCoord2fARB = (vglMultiTexCoord2fARB_t) vwglGetProcAddress( "glMultiTexCoord2fARB" );
-		vglMultiTexCoord2fvARB = (vglMultiTexCoord2fvARB_t) vwglGetProcAddress( "glMultiTexCoord2fvARB" );
+		vglMultiTexCoord2fARB = (vglMultiTexCoord2fARB_t) wglGetProcAddress( "glMultiTexCoord2fARB" );
+		vglMultiTexCoord2fvARB = (vglMultiTexCoord2fvARB_t) wglGetProcAddress( "glMultiTexCoord2fvARB" );
 
 		__chkptr( vglActiveTextureARB );
 		__chkptr( vglClientActiveTextureARB );
@@ -219,13 +219,11 @@ void R_StartUp( void )
 //	GL_LoadGLApi( r_gldriver->string );
 	
 //	GL_LoadWGLApi( r_gldriver->string );
-	VWGL_ResolveAPI();
+	//VWGL_ResolveAPI();
 
-	VGL_ResolveAPI();
+	//VGL_ResolveAPI();
 
-	__chkptr( vwglCreateContext );
-	__chkptr( vwglDeleteContext );
-	__chkptr( vwglMakeCurrent );
+	
 
 //	#if( !vglBegin || !vglVertex3f )
 	//  {
@@ -284,7 +282,7 @@ void R_ShutDown( void )
 void R_SwapBuffer( void )
 {
 	TFUNC_ENTER;
-	vwglSwapBuffers( g_hDC );
+	SwapBuffers( g_hDC );
 	TFUNC_LEAVE;
 }
 
@@ -442,7 +440,7 @@ void R_WindowStartUp()
 			NULL, NULL, g_wininstance, NULL );
 	}
 
-	
+	g_ncmdshow = 5;
 	ShowWindow(g_hWnd, g_ncmdshow);
 	UpdateWindow(g_hWnd);
 
@@ -463,8 +461,8 @@ void R_WindowShutDown()
 #if 1
 	if( g_hGLRC )
 	{
-		vwglMakeCurrent( NULL, NULL );
-		vwglDeleteContext( g_hGLRC );
+		wglMakeCurrent( NULL, NULL );
+		wglDeleteContext( g_hGLRC );
 	}
 #endif
 	ReleaseDC( g_hWnd, g_hDC );
@@ -528,18 +526,17 @@ void R_WGLSetupPixelFormat()
 		0, 0, 0,                        /* no layer, visible, damage masks */
 	};
 
-	int pixelformat;
+	
 
 	TFUNC_ENTER;
 
 	ppfd = &pfd;
 
-	__chkptr( vwglChoosePixelFormat );
-	__chkptr( vwglSetPixelFormat );
-
-	pixelFormat = vwglChoosePixelFormat( g_hDC, ppfd);
 	
-	if( !pixelformat )
+
+	pixelFormat = ChoosePixelFormat( g_hDC, ppfd);
+	
+	if( !pixelFormat )
 	{
 		
 		FormatMessage((FORMAT_MESSAGE_FROM_SYSTEM), NULL, GetLastError(),
@@ -548,9 +545,9 @@ void R_WGLSetupPixelFormat()
 		//__error( "ChoosePixelFormat failed: '%s'\n", errbuf );
 	}
 
-	printf( "pixelformat: %d\n", pixelformat );
+	printf( "pixelformat: %d\n", pixelFormat );
 
-	if (vwglSetPixelFormat( g_hDC, pixelFormat, &pfd) == FALSE )
+	if (SetPixelFormat( g_hDC, pixelFormat, &pfd) == FALSE )
 	{
 		FormatMessage((FORMAT_MESSAGE_FROM_SYSTEM), NULL, GetLastError(),
 			      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
@@ -574,11 +571,11 @@ void R_WGLStartUp()
 	//	R_WGLSetupPalette();
 	R_WGLSetupPixelFormat();
 
-	__chkptr( vwglCreateContext );
-	__chkptr( vwglMakeCurrent );
-	__chkptr( vwglSwapBuffers );
+	__chkptr( wglCreateContext );
+	__chkptr( wglMakeCurrent );
+	
 
-      	g_hGLRC = vwglCreateContext( g_hDC );
+      	g_hGLRC = wglCreateContext( g_hDC );
        	
 	if( !g_hGLRC )
 	{
@@ -589,7 +586,7 @@ void R_WGLStartUp()
 		__error( "wglCreateContext failed: '%s'\n", errbuf );
 	}	
 
-	res =  vwglMakeCurrent( g_hDC, g_hGLRC );
+	res =  wglMakeCurrent( g_hDC, g_hGLRC );
              //              _wglMakeCurrent
 	printf( "wglMakeCurrent: %d\n", res );
 #endif

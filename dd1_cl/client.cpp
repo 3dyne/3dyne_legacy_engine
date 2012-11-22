@@ -44,7 +44,7 @@
 #include "shock.h"
 
 extern "C" {
-l_api_t *ApiExchange( g_api_t *api );
+__declspec(dllexport) l_api_t *ApiExchange( g_api_t *api );
 }
 
 l_api_t	l_api;
@@ -129,7 +129,7 @@ static void CL_SetOutputByteIter( byte_iter_t *bi )
 	bi_out = bi;
 }
 
-l_api_t *ApiExchange( g_api_t *api )
+__declspec(dllexport) l_api_t *ApiExchange( g_api_t *api )
 {
 	memset( &l_api, 0, L_API_SIZE );
 

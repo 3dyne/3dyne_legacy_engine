@@ -167,7 +167,7 @@ hobj_t* ReadClassRecursive( tokenstream_t *ts )
 		__error( "TOKEN FAIL. unexpected end of class\n" );
 	}
 
-	if ( strcmp( ts->token, "obj" ) )
+	if ( strcmp( ts->token, "obj" ) && strcmp( ts->token, "class" ))
 		__error( "ReadClass: expected 'class' token.\n" );
 //	printf( "%s\n", ts->token ); getchar();
 
@@ -213,7 +213,7 @@ hobj_t* ReadClassRecursive( tokenstream_t *ts )
 		if ( ts->token[0] == '}' )
 			break; // finish class
 
-		if ( !strcmp( ts->token, "obj" ) )
+		if ( !strcmp( ts->token, "obj" ) || !strcmp( ts->token, "class" ) )
 		{			
 			KeepToken( ts );
 			hobj = ReadClassRecursive( ts );
@@ -242,6 +242,7 @@ hobj_t* ReadClassRecursive( tokenstream_t *ts )
 			__error( "TOKEN FAIL. unexpected end of class\n" );
 		}
 		__chkptr( pair->value );
+
 		MM_Free( pair->value );
 
 		strcpy( tmpbuf, ts->token );
@@ -290,8 +291,8 @@ hobj_t* ReadClass( tokenstream_t *ts )
 	{
 		__error( "TOKEN FAIL. unexpected end of class\n" );
 	}
-
-	if ( strcmp( ts->token, "obj" ) )
+	printf( "token: %s\n", ts->token );
+	if ( strcmp( ts->token, "obj" ) && strcmp( ts->token, "class" ))
 	{
 		printf( "ReadClass: expected 'class' token.\n" );
 		return NULL;

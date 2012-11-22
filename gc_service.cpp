@@ -1230,7 +1230,7 @@ void SHM_GetCurpage( char * );
 void GC_MainLoop()
 {
 	int	inactive, loops;
-	int	tps;
+	int	tps = 0;
 	int	i;
 	
 	sh_var_t		*var_dumpudp;

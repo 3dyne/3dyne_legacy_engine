@@ -48,6 +48,7 @@
 #define GLAPI extern
 #endif
 
+#if 0
 typedef HGLRC (APIENTRY *vwglCreateContext_t) ( HDC );
 typedef BOOL (APIENTRY *vwglMakeCurrent_t) ( HDC, HGLRC );
 typedef BOOL (APIENTRY *vwglDeleteContext_t ) ( HGLRC );
@@ -64,5 +65,6 @@ GLAPI vwglGetProcAddress_t vwglGetProcAddress;
 GLAPI vwglChoosePixelFormat_t vwglChoosePixelFormat;
 GLAPI vwglSetPixelFormat_t vwglSetPixelFormat;
 GLAPI vwglSwapBuffers_t	vwglSwapBuffers;
+#endif
 
 #endif

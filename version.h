@@ -36,5 +36,5 @@
 #define BCOMMENT "If you have it be glad!"
 #define BHOST "dawnx201s"
 #define BVERSION "0.1"
-#define BHOSTSYSTEM "linux.i386"
+#define BHOSTSYSTEM "win32.x86"
 #define DD_BTYPE "tech demo"

@@ -186,9 +186,9 @@ void SHP_ParseFile( ibfile_t* handle )
 	int	size;
 	__chkptr( handle );
 
-	printf( "call!\n" );
+	//printf( "call!\n" );
 	size = IB_GetSize( handle );
-	printf( "call!\n" );
+	//printf( "call: %d\n", size );
 
 
 	buf = ( char* )alloca( size + 1 );

@@ -193,7 +193,7 @@ void *_MM_Malloc( int size )
 //	ptr = ( void * ) HeapAlloc( heap, 0, size );
 	ptr = malloc( size );
 #endif
-
+	
 #ifdef mm_checksize
 	t = ptr;
 	ptr = (( unsigned char * )ptr + sizeof( unsigned int ));
@@ -240,7 +240,7 @@ void _MM_Free( void *ptr )
 #endif
 
 	
-
+	
 #if defined ( linux_i386 )
 	free( ptr );
 	mm_numfree++;

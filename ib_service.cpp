@@ -606,7 +606,7 @@ ib_file_t *IB_Open( const char *_name )
 	int	try_ = 0;
 
 
-
+	//printf( "open: %s\n", _name );
 	if( !ib_srclast )
 	{
 		__warning( "no sources to search in\n" );
