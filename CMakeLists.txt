@@ -149,7 +149,6 @@ set( ENGINE_SRC g_main.cpp
 	u_mempack.cpp
 	tfunc.cpp
 	l_wrap.cpp
-	oldc_ghetto.c
 	)
 	
 set( R_FAKE_SRC r_fake/g_blockmap.cpp

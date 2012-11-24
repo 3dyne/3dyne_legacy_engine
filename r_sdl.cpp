@@ -41,7 +41,9 @@ void R_StartUp()
     r_deviceheight = SHP_GetVar( "r_deviceheight" );
     r_fullscreen = SHP_GetVar( "r_fullscreen" );
  
-    if(( sdl_surf_display = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_OPENGL )) == NULL) {
+	Uint32 fs_flag = r_fullscreen->ivalue ? SDL_FULLSCREEN : 0;
+
+	if(( sdl_surf_display = SDL_SetVideoMode(r_devicewidth->ivalue, r_deviceheight->ivalue, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_OPENGL | fs_flag )) == NULL) {
         __error( "SDL_SetVidMode failed\n" );;
     }
 	I_SDLStartUp();

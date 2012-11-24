@@ -61,7 +61,7 @@ extern gl_info_t	*r_glinfo;
 //#include "gl_service.h"
 //#include "glx_service.h"
 
-#include "vgl_interface.h"
+//#include "vgl_interface.h"
 #include "vglx_interface.h"
 
 
@@ -100,9 +100,9 @@ void I_X11DoMouseButton( XEvent, Display* );
 //#include <directx.h>
 //#include <dinput.h>
 
-#include "vgl_interface.h"
+//#include "vgl_interface.h"
 #include "vwgl_interface.h"
-
+#if 0
 extern HINSTANCE	g_wininstance;
 extern int		g_ncmdshow;
 
@@ -116,7 +116,7 @@ extern RECT	g_winrect;
 //extern LPDIRECTINPUTDEVICE lpdiKeyboard;
 
 extern unsigned char i_dxscans[];
-
+#endif
 void R_WindowStartUp();
 void R_WindowShutDown();
 

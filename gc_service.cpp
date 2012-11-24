@@ -1787,11 +1787,6 @@ void GC_ClientInputUpdate()
 	wf_mdy += md_y;
 
         
-        for( int i = 1; i < keventlist[0].sym; ++i ) {
-            printf( "event: %d\n", keventlist[i].sym );
-        }
-        //printf( "events: %d\n", keventlist[0] );
-        
 	if( gc_isshell )
 		SHV_Update( keventlist );
 	SHM_Update( keventlist );
