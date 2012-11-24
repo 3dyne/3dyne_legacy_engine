@@ -102,6 +102,7 @@ void VGL_ResolveField( vgl_field_t *field )
 
 void VGL_ResolveAPI()
 {
+#if 0
 	int	i;
 	
 	vgl_notresolved = 0;
@@ -121,11 +122,13 @@ void VGL_ResolveAPI()
 	if( vgl_notresolved )
 		__warning( "%d symbols unresolved\n", vgl_notresolved );
 	__message( "\t\tgl api loaded\n" );
+#endif
 }
 
 
 void VGL_FreeAPI()
 {
+#if 0
 	int	i;
 	
 	for( i = 0;; i++ )
@@ -137,6 +140,7 @@ void VGL_FreeAPI()
 	}
 
 	__message( "gl api freed.\n" );
+#endif
 }
 
 void VGLX_ResolveAPI()
@@ -201,10 +205,10 @@ static void VGL_ResolveExt( void )
 		__chkptr( vglMultiTexCoord2fvARB );
 
 	
-		glActiveTextureARB = vglActiveTextureARB;
-		glClientActiveTextureARB = vglClientActiveTextureARB;
-		glMultiTexCoord2fARB = vglMultiTexCoord2fARB;
-		glMultiTexCoord2fvARB = vglMultiTexCoord2fvARB;
+// 		glActiveTextureARB = vglActiveTextureARB;
+// 		glClientActiveTextureARB = vglClientActiveTextureARB;
+// 		glMultiTexCoord2fARB = vglMultiTexCoord2fARB;
+// 		glMultiTexCoord2fvARB = vglMultiTexCoord2fvARB;
 	}
 
 }			

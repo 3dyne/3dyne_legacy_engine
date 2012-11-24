@@ -40,8 +40,10 @@
 #ifndef __vgl_interface_h
 #define __vgl_interface_h
 
-#include <windows.h>
-#include <gl/GL.h>
+#ifdef win32_x86
+  #include <Windows.h>
+#endif
+#include <GL/gl.h>
 
 
 
@@ -2656,7 +2658,9 @@ GLAPI vglClientActiveTextureARB_t vglClientActiveTextureARB;
 GLAPI vglMultiTexCoord2fARB_t vglMultiTexCoord2fARB;
 GLAPI vglMultiTexCoord2fvARB_t vglMultiTexCoord2fvARB;
 
+#ifdef win32_x86
 GLAPI glActiveTextureARB_t glActiveTextureARB;
 GLAPI glClientActiveTextureARB_t glClientActiveTextureARB;
 GLAPI glMultiTexCoord2fARB_t glMultiTexCoord2fARB;
 GLAPI glMultiTexCoord2fvARB_t glMultiTexCoord2fvARB;
+#endif

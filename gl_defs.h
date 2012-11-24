@@ -47,7 +47,11 @@ typedef struct {
 
 
 #ifdef GL_LINKED // if gl is linked, include gl.h
-#include <Windows.h>
+
+#ifdef win32_x86
+  #include <Windows.h>
+#endif
+
 #include <GL/gl.h>
 #else // if not, use our own.
 

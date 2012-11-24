@@ -935,7 +935,11 @@ GLAPI void (* glCopyColorTable ) ( GLenum target, GLenum internalformat,
 	GLint x, GLint y, GLsizei width );
 
 #else // GL_LINED
-#include <Windows.h>
-#include <gl/GL.h>
+
+#ifdef win32_x86
+  #include <Windows.h>
+#endif
+
+#include <GL/gl.h>
 #endif
 #endif

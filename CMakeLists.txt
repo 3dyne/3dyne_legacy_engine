@@ -33,26 +33,43 @@ cmake_minimum_required( VERSION 2.8 )
 
 add_subdirectory( dd1_cl )
 add_subdirectory( dd1_sv )
-add_subdirectory( 3dyne_extlibs )
+
+if(WIN32)
+  add_subdirectory( 3dyne_extlibs )
+endif()
 #set( CMAKE_CXX_FLAGS "-Wall" )
 #set( CMAKE_C_FLAGS "-Wall" )
-set( CMAKE_CXX_FLAGS "-D_SCL_SECURE_NO_WARNINGS /INCREMENTAL:NO" )
+
+
+
+if(WIN32)
+  set( CMAKE_CXX_FLAGS "-D_SCL_SECURE_NO_WARNINGS /INCREMENTAL:NO" )
+
+  include_directories( 3dyne_extlibs/jpeg-6b 3dyne_extlibs/bzip2-1.0.6 )
+  add_definitions( -Dwin32_x86 -DGL_LINKED -D__USE_IBASE -DS_INGAME -DBHOSTSYSTEM="win32.x86") 
+  
+  set( SS_SRC r_wgl.cpp i_win32.cpp wgl_service.cpp i_vkmap.cpp )
+else()
+
+  add_definitions( -Dlinux_i386 -DGL_LINKED -D__USE_IBASE -DS_INGAME -DBHOSTSYSTEM="linux.i386") 
+  set( CMAKE_CXX_FLAGS "-Wall" )
+  
+#   set( SS_SRC r_glx.cpp i_x11.cpp glx_service.cpp )
+  set( SS_SRC r_sdl )
+endif()
+
+
 # set( CMAKE_C_COMPILER g++ )
 include_directories( shared . r_fake r_gen_gl)
-include_directories( 3dyne_extlibs/jpeg-6b 3dyne_extlibs/bzip2-1.0.6 )
+
 
 #add_definitions( -Dlinux_i386 -D__USE_IBASE -DS_INGAME ) 
-add_definitions( -Dwin32_x86 -DGL_LINKED -D__USE_IBASE -DS_INGAME ) 
+
 # add_definitions( -DBHOSTSYSTEM=xxx -DBDATE=yyy -DBHOST=zzz -DBVERSION=000 -DDD_BTYPE=debug -DBCOMMENT="wooooot!!!11" )
 
-#set( SS_SRC r_glx.cpp
-#	i_x11.cpp
-#	glx_service.cpp )
+#
 
-set( SS_SRC r_wgl.cpp
-	i_win32.cpp
-	wgl_service.cpp 
-	i_vkmap.cpp )
+
 
 set( ENGINE_SRC g_main.cpp
 	la_service.cpp
@@ -188,4 +205,8 @@ set( R_GEN_GL_SRC r_gen_gl/r_real.cpp
 add_executable( dd ${ENGINE_SRC} ${R_FAKE_SRC} ${R_GEN_GL_SRC} ${SS_SRC} ) 
 #target_link_libraries( dd dl m X11  Xxf86dga Xxf86vm Xext pthread jpeg SDL bz2 )
 
-target_link_libraries( dd jpeg bz2 ws2_32 opengl32 winmm )
+if(WIN32)
+  target_link_libraries( dd jpeg bz2 ws2_32 opengl32 winmm )
+else()
+  target_link_libraries( dd dl m X11  Xxf86dga Xxf86vm Xext pthread jpeg SDL bz2 GL )
+endif()

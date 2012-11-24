@@ -43,8 +43,15 @@
 
 #include "shock.h"
 
+
+#ifdef win32_x86
+#define DD_DLL_EXPORT __declspec(dllexport)
+#else
+#define DD_DLL_EXPORT
+#endif
+
 extern "C" {
-__declspec(dllexport) l_api_t *ApiExchange( g_api_t *api );
+DD_DLL_EXPORT l_api_t *ApiExchange( g_api_t *api );
 }
 
 l_api_t	l_api;
@@ -164,7 +171,7 @@ static void SV_SetOutputByteIter( byte_iter_t *bi )
 	bi_out = bi;
 }
 
-__declspec(dllexport) l_api_t *ApiExchange( g_api_t *api )
+DD_DLL_EXPORT l_api_t *ApiExchange( g_api_t *api )
 {
 	memset( &l_api, 0, L_API_SIZE );
 

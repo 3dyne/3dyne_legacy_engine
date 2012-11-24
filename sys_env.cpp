@@ -55,10 +55,13 @@ static char 	text[128];
 #if defined( linux_i386 ) || defined( irix_mips ) || defined( win32_x86 )
 int main( int argc, char *argv[] )
 {
-	int	ret;
-	_chdir("E:\\src\\dd-0.2-devel-exec");
-	ret = g_main( argc, argv );
-	return ret;
+    int	ret;
+    
+#ifdef win32_x86
+    _chdir("E:\\src\\dd-0.2-devel-exec");
+#endif
+    ret = g_main( argc, argv );
+    return ret;
 }
 
 

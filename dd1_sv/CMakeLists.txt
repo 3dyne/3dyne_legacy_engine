@@ -29,12 +29,25 @@
 #     Matthias C. Berger (mcb77@gmx.de) - initial API and implementation
 #     Simon Berger (simberger@gmail.com) - initial API and implementation
 #-------------------------------------------------------------------------------
-add_definitions( -Dwin32_x86 -DS_INSERVER -Dtrace_function )
+if(WIN32)
+  add_definitions( -Dwin32_x86 -DS_INSERVER -Dtrace_function )
+  set( CMAKE_CXX_FLAGS "-D_SCL_SECURE_NO_WARNINGS /INCREMENTAL:NO" )
+  
+  set( SS_SRC r_wgl.cpp i_win32.cpp wgl_service.cpp i_vkmap.cpp )
+else()
+  add_definitions( -Dlinux_i386 -DS_INSERVER -Dtrace_function )
+  
+  set( CMAKE_CXX_FLAGS "-Wall" )
+  
+  set( SS_SRC r_glx.cpp i_x11.cpp glx_service.cpp )
+endif()
+
+
 # add_definitions( -DBHOSTSYSTEM=xxx -DBDATE=yyy -DBHOST=zzz -DBVERSION=000 -DDD_BTYPE=debug -DBCOMMENT="wooooot!!!11" )
 include_directories( ../shared . )
 
 #set( CMAKE_CXX_FLAGS "-Wall" )
-set( CMAKE_CXX_FLAGS "-D_SCL_SECURE_NO_WARNINGS /INCREMENTAL:NO" )
+
 set( SRC server.cpp
 	sv_main.cpp
 	../shared/shock.cpp
