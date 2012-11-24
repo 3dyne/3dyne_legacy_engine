@@ -119,7 +119,7 @@ static const char * CL_Com( const char *in )
 		__warning( "can't handle input\n" );
 		result = "fail";
 	}
-
+	
 	return result;
 }
 

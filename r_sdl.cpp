@@ -1,12 +1,14 @@
 #define vgl_notextern
-#include <X11/cursorfont.h>
+
 #include "interfaces.h"
 #include "r_private.h"
 #include "r_interface.h"
 
-
-#include "SDL/SDL.h"
-
+#ifdef win32_x86
+#include <SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
 static SDL_Surface* sdl_surf_display = 0;
 sh_var_t *r_devicewidth, *r_deviceheight;
 static sh_var_t *r_fullscreen;
@@ -26,6 +28,7 @@ gl_info_t       *r_glinfo = NULL;
 
   ====================
 */
+void I_SDLStartUp();
 void R_StartUp()
 {
     TFUNC_ENTER;
@@ -41,7 +44,7 @@ void R_StartUp()
     if(( sdl_surf_display = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_OPENGL )) == NULL) {
         __error( "SDL_SetVidMode failed\n" );;
     }
-    
+	I_SDLStartUp();
     
     // hard coded gl info. I assume that _every_ card in use on this planet supports this stuff...
     r_glinfo = (gl_info_t *)MM_Malloc( sizeof( gl_info_t ));
@@ -160,7 +163,7 @@ void I_Update()
 }
 
 
-void I_SDLStartUp( Window arg_window, Display *arg_display )
+void I_SDLStartUp()
 {
         
 
@@ -193,7 +196,7 @@ void I_SDLStartUp( Window arg_window, Display *arg_display )
 
 }
 
-void I_X11ShutDown( Window arg_window, Display *arg_display )
+void I_X11ShutDown()
 {
     SDL_WM_GrabInput(SDL_GRAB_OFF);
 }
@@ -201,7 +204,7 @@ void I_X11ShutDown( Window arg_window, Display *arg_display )
 
 
 
-void I_X11GrabMouse( Display *arg_display, int flag )
+void I_X11GrabMouse( int flag )
 {
     
     

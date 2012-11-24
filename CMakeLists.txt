@@ -45,10 +45,16 @@ endif()
 if(WIN32)
   set( CMAKE_CXX_FLAGS "-D_SCL_SECURE_NO_WARNINGS /INCREMENTAL:NO" )
 
-  include_directories( 3dyne_extlibs/jpeg-6b 3dyne_extlibs/bzip2-1.0.6 )
+  include_directories( 3dyne_extlibs/jpeg-6b 3dyne_extlibs/bzip2-1.0.6 3dyne_extlibs/SDL-1.2.15/include )
+  #if( ${SDL_ROOT} )
+   # include_directories( ${SDL_ROOT}/include )
+  #  LINK_DIRECTORIES( ${SDL_ROOT}/lib/x86 )	
+  #endif()
+
   add_definitions( -Dwin32_x86 -DGL_LINKED -D__USE_IBASE -DS_INGAME -DBHOSTSYSTEM="win32.x86") 
   
-  set( SS_SRC r_wgl.cpp i_win32.cpp wgl_service.cpp i_vkmap.cpp )
+  #set( SS_SRC r_wgl.cpp i_win32.cpp wgl_service.cpp i_vkmap.cpp )
+  set( SS_SRC r_sdl )
 else()
 
   add_definitions( -Dlinux_i386 -DGL_LINKED -D__USE_IBASE -DS_INGAME -DBHOSTSYSTEM="linux.i386") 
@@ -201,12 +207,15 @@ set( R_GEN_GL_SRC r_gen_gl/r_real.cpp
 	r_gen_gl/unitex.cpp
 	r_gen_gl/shader.cpp
 	)
-	
+
+
 add_executable( dd ${ENGINE_SRC} ${R_FAKE_SRC} ${R_GEN_GL_SRC} ${SS_SRC} ) 
 #target_link_libraries( dd dl m X11  Xxf86dga Xxf86vm Xext pthread jpeg SDL bz2 )
 
+
 if(WIN32)
-  target_link_libraries( dd jpeg bz2 ws2_32 opengl32 winmm )
+  
+  target_link_libraries( dd jpeg bz2 ws2_32 opengl32 winmm SDL  )
 else()
   target_link_libraries( dd dl m X11  Xxf86dga Xxf86vm Xext pthread jpeg SDL bz2 GL )
 endif()

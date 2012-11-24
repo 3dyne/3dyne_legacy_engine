@@ -1,4 +1,0 @@
-C:/src/3dyne_extlibs/build_vs12/CMakeFiles/ALL_BUILD.dir
-C:/src/3dyne_extlibs/build_vs12/CMakeFiles/ZERO_CHECK.dir
-C:/src/3dyne_extlibs/build_vs12/bzip2-1.0.6/CMakeFiles/bz2.dir
-C:/src/3dyne_extlibs/build_vs12/jpeg-6b/CMakeFiles/jpeg.dir
