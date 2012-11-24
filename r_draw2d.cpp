@@ -115,7 +115,7 @@ void R_BeginDraw2d( void )
 	w = r_devicewidth->ivalue;
 	h = r_deviceheight->ivalue;
 
-	if ( w < 1 || w > 2048 || h < 1 || h > 2048 )
+	if ( w < 1 || w > 4096 || h < 1 || h > 2048 )
 		__error( "odd device resolutin.\n" );
 
 //	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

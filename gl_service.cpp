@@ -89,39 +89,3 @@ void GL_GetInfo( gl_info_t *info ) // fill malloced struct
 	GL_GetSpecialInfo( info );
 	
 }
-#ifndef GL_LINKED
-extern "C" {
-void oldc_ghetto_load_gl( int );
-}
-#endif
-
-void GL_LoadGLApi( char *name )
-{
-
-#ifdef GL_LINKED
-    __named_message( "gl lib is linked. noing nothing\n" );
-    return;
-#else 
-
-	gl_h = SYS_DllBegin( name );
-
-    oldc_ghetto_load_gl( gl_h );
-
-
-	__named_message( "\tGL symbols are from %s\n", name );
-
-#endif
-}
-
-
-void GL_RejectGLApi()
-{
-#ifdef GL_LINKED
-    __named_message( "leaving\n" );
-    return;
-#else
-
-	SYS_DllEnd( gl_h );
-	__named_message( "\tdone\n" );
-#endif
-}

@@ -36,7 +36,7 @@
 // vgl proc pointers and link list
 
 
-
+#if 0
 #ifndef __vgl_interface_h
 #define __vgl_interface_h
 
@@ -2663,4 +2663,6 @@ GLAPI glActiveTextureARB_t glActiveTextureARB;
 GLAPI glClientActiveTextureARB_t glClientActiveTextureARB;
 GLAPI glMultiTexCoord2fARB_t glMultiTexCoord2fARB;
 GLAPI glMultiTexCoord2fvARB_t glMultiTexCoord2fvARB;
+#endif
+
 #endif
