@@ -93,14 +93,16 @@ static void LinkLightmapsSelect_func( lightmap_t *lmap )
 	link_lightmap_num++;
 }
 
-static lightmap_t * LinkLightmaps( db_lightmap_t *db, unique_t id_shape, int type )
+static lightmap_t * LinkLightmaps( lightmap_db_cpp *db, unique_t id_shape, int type )
 {
 	link_lightmap_head = NULL;
 	link_lightmap_type = type;
 	link_lightmap_num = 0;
 
-	LightmapDB_SelectLightmapsWhereShapeID( db, id_shape, LinkLightmapsSelect_func );
-
+	//LightmapDB_SelectLightmapsWhereShapeID( db, id_shape, LinkLightmapsSelect_func );
+    db->SelectLightmapsWhereShapeID( id_shape, LinkLightmapsSelect_func );
+    
+    
 	return link_lightmap_head;
 }
 

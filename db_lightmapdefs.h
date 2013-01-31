@@ -96,7 +96,7 @@ typedef struct x_cache_s
 } x_cache_t;
 
 #define LIGHTMAP_SHAPE_ID_HASH_SIZE	( 4096 )
-
+#if 0
 typedef struct db_lightmap_s
 {
 	// no special sort order
@@ -109,5 +109,7 @@ typedef struct db_lightmap_s
 
 	lightmap_t     *lightmap_hash[LIGHTMAP_SHAPE_ID_HASH_SIZE];
 } db_lightmap_t;
+#endif
 
+class lightmap_db_cpp;
 #endif

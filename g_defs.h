@@ -126,8 +126,9 @@ typedef struct g_map_s
 	ic_mgr_t		*imgcache;
 	shader_mgr_t		*shader_mgr;       
 
-	db_lightmap_t		*lightmap_db;
-	db_shape_t		*shape_db;
+	//db_lightmap_t		*lightmap_db;
+	lightmap_db_cpp *lightmap_db;
+    db_shape_t		*shape_db;
 	
 	db_uoc_t		*uoc_db;
 

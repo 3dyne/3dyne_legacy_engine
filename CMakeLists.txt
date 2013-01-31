@@ -210,7 +210,7 @@ set( R_GEN_GL_SRC r_gen_gl/r_real.cpp
 
 add_executable( dd ${ENGINE_SRC} ${R_FAKE_SRC} ${R_GEN_GL_SRC} ${SS_SRC} ) 
 #target_link_libraries( dd dl m X11  Xxf86dga Xxf86vm Xext pthread jpeg SDL bz2 )
-
+add_executable( disk_hash disk_hash.cpp )
 
 if(WIN32)
   

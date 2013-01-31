@@ -215,7 +215,7 @@ void GI_SelectShapesInBoundBox( vec3d_t min, vec3d_t max, void (*action_func)(un
 */
 lightsource_t * GI_SelectLightSourceWhereAnyLightID( unique_t id_any_light )
 {
-	return LightmapDB_SelectLightsourceWhereAnyLightID( gc_state->map.lightmap_db, id_any_light );
+	return gc_state->map.lightmap_db->SelectLightsourceWhereAnyLightID( id_any_light );
 }
 
 

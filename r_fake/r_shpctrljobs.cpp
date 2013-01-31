@@ -120,7 +120,7 @@ shapeCtrlJobRes ShapeCtrlJob_RunJob_ValidateShape( shape_ctrl_job_t *job )
 						if ( layer->lightmap_head )
 						{
 							char *pixels;
-							pixels = LightmapDB_GetPixels( a_map->lightmap_db,layer->lightmap_head, sub->width*sub->height );
+							pixels = a_map->lightmap_db->GetPixels( layer->lightmap_head, sub->width*sub->height );
 							memcpy( sub->pixels, pixels, sub->width*sub->height*4 );
 //							FREE( pixels );
 						}

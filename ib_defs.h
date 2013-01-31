@@ -39,7 +39,9 @@
 
 #define SOURCE_SAR	( 0 )
 #define SOURCE_DISK	( 1 )
+#define SOURCE_MEH   ( 2 )
 
+#if 0
 struct ib_bzdata_s;
 
 typedef struct ib_file_s {
@@ -72,5 +74,18 @@ typedef struct ib_file_s {
 } ib_file_t;
 
 typedef ib_file_t ibfile_t;
+#else
+namespace ibase {
+    class file;
+};
+
+typedef struct {
+    ibase::file *f_;
+    
+} ib_file_t;
+
+typedef ib_file_t ibfile_t;
+
+#endif
 
 #endif

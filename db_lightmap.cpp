@@ -31,8 +31,15 @@
  */
 
 
-
-// db_lightmap.c
+// CHANGED FILES:
+// db_lightmap.cpp
+// db_lightmap.h
+// db_lightmapdefs.h
+// g_defs.h
+// l_wrap.cpp
+// r_fake/render3.cpp
+// r_fake/r_shapes.cpp
+// r_fake/r_shpctrljobs.cpp
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -89,6 +96,7 @@ static void LightmapDB_InternalSetupRamps( void )
 
   ==============================
 */
+#if 0
 void LightmapDB_Init( db_lightmap_t *db )
 {
 	INITTYPE( db, db_lightmap_t );
@@ -109,6 +117,175 @@ void LightmapDB_Init( db_lightmap_t *db )
 	}
 
 }
+#endif
+lightmap_db_cpp::lightmap_db_cpp( const char* lightmap_bin_name, const char* lightmap_class_name, const char* source_class_name ) 
+: lm_bin_handle_(lightmap_bin_name),
+  lm_bin_mapping_(lm_bin_handle_)
+
+{
+    
+    U_InitList( &lightsource_list );
+
+    X_CacheInit( &cache, 1024*1024*16, 1024*1024*4, 1024*1024*3 );
+
+    lightmap_bin = NULL;
+
+    std::fill( lightmap_hash, lightmap_hash + LIGHTMAP_SHAPE_ID_HASH_SIZE, (lightmap_t*)0 );
+    
+    if( db_internal_init == false )
+    {
+        db_internal_init = true;
+
+        LA_InsertVarview( "vv_lightcc", VV_LightCC );
+        
+        LightmapDB_InternalSetupRamps();
+    }
+    
+    ////////////////////////////////////////////////////////
+    // previous Load code
+    int     i;
+
+    hobj_t      *lightmap_root;
+    hobj_t      *lightsource_root;
+    unsigned char   *lightmap_bin;
+    ib_file_t       *h;
+    int         filesize;
+    hobj_search_iterator_t  iter;
+    hobj_t          *lightmap;
+    hobj_t          *lightsource;
+    tokenstream_t   *ts;
+
+    u_list_iter_t       lsrc_iter;
+
+    lightmap_t      *lmap;
+    lightsource_t       *lsrc;
+
+    //
+    // load lightmap binary
+    //
+#if 0
+    h = IB_Open( lightmap_bin_name );
+    if ( !h )
+    {
+        __error( "can't open lightmap binary\n" );
+    }
+    
+    filesize = IB_GetSize( h );
+    lightmap_bin = (unsigned char *)NEWBYTES( filesize );
+    __chkptr( lightmap_bin );
+
+    IB_Read( lightmap_bin, filesize, 1, h );
+    IB_Close( h );
+
+    lightmap_bin = lightmap_bin;
+#else
+    filesize = lm_bin_handle_.get_size();
+    
+    lightmap_bin = (unsigned char*)const_cast<char *>(lm_bin_mapping_.ptr());
+    __chkptr( lightmap_bin );
+#endif
+
+    //
+    // load lightmap class
+    //
+
+    ts = BeginTokenStream( lightmap_class_name );
+    if ( !ts )
+    {
+        __error( "can't open lightmap class\n" );
+    }
+    
+    lightmap_root = ReadClass( ts );
+    if ( !lightmap_root )
+    {
+        __error( "can't load lightmap class\n" );
+    }
+    EndTokenStream( ts );
+
+    InitClassSearchIterator( &iter, lightmap_root, "*" );
+    for ( ; ( lightmap = SearchGetNextClass( &iter ) ) ; )
+    {
+        int     ofs;
+
+        lmap = NEWTYPE( lightmap_t );
+        
+        EasyFindClsrefAsUnique( &lmap->id_shape, lightmap, "shape_id" );
+        EasyFindClsrefAsUnique( &lmap->id_source, lightmap, "source_id" );
+        EasyFindInt( &lmap->type, lightmap, "type" );
+        EasyFindInt( &ofs, lightmap, "ofs" );
+        
+        lmap->pixel_ptr = &lightmap_bin[ofs];
+        
+        insert_hash( lmap );
+    }
+
+    //
+    // load lightsource class
+    //
+
+    ts = BeginTokenStream( source_class_name );
+    if ( !ts )
+    {
+        __error( "can't open lightsource class\n" );
+    }
+
+    lightsource_root = ReadClass( ts );
+    if ( !lightsource_root )
+    {
+        __error( "can't load lightsource class\n" );
+    }
+    EndTokenStream( ts );
+    
+    InitClassSearchIterator( &iter, lightsource_root, "*" );
+    for ( ; ( lightsource = SearchGetNextClass( &iter ) ) ; )
+    {
+        lsrc = NEWTYPE( lightsource_t );
+
+        lsrc->id_source = StringToUnique( lightsource->name );
+        EasyFindClsrefAsUnique( &lsrc->id_any_light, lightsource, "any_light" );
+        EasyFindVec3d( lsrc->color, lightsource, "color" );
+
+        U_ListInsertAtHead( &lightsource_list, lsrc );
+    }
+
+    //
+    // link lightsources and lightmaps
+    //
+
+    // for each id_source
+    //  link all lightmaps with same id_source
+    //  set list head
+
+    U_ListIterInit( &lsrc_iter, &lightsource_list );
+    for ( ; ( lsrc = (lightsource_t *)U_ListIterNext( &lsrc_iter ) ) ; ) 
+    {
+        lsrc->head = NULL;
+
+        for ( i = 0; i < LIGHTMAP_SHAPE_ID_HASH_SIZE; i++ )
+        {
+            for ( lmap = lightmap_hash[i]; lmap; lmap=lmap->hash_link )
+            {
+                if ( lmap->id_source != lsrc->id_source )
+                {
+                    continue;
+                }
+                
+                lmap->source_ref = lsrc;
+                
+                lmap->source_link = lsrc->head;
+                lsrc->head = lmap;
+            }
+        }
+    }
+
+    //
+    // destroy classes
+    //
+    
+    DeepDestroyClass( lightmap_root );
+    DeepDestroyClass( lightsource_root );    
+}
+
 
 /*
   ==============================
@@ -122,7 +299,7 @@ static void ObjDestroy( void *obj )
 	__chkptr( obj );
 	FREE( obj );
 }
-
+#if 0
 void LightmapDB_CleanUp( db_lightmap_t *db )
 {     
 	int		i;
@@ -150,7 +327,35 @@ void LightmapDB_CleanUp( db_lightmap_t *db )
 		FREE( db->lightmap_bin );
 	}
 }
+#endif
 
+lightmap_db_cpp::~lightmap_db_cpp() {
+    int     i;
+    
+    U_CleanUpList( &lightsource_list, ObjDestroy );
+    
+    //
+    // clean up lightmap hash
+    //
+    for ( i = 0; i < LIGHTMAP_SHAPE_ID_HASH_SIZE; i++ )
+    {
+        lightmap_t  *lmap, *next;
+        
+        for ( lmap = lightmap_hash[i]; lmap; lmap=next )
+        {
+            next = lmap->hash_link;
+            FREE( lmap );
+        }
+    }
+    
+    X_CacheCleanUp( &cache );
+
+    
+//     if ( lightmap_bin )
+//     {
+//         FREE( lightmap_bin );
+//     }
+}
 
 /*
   ==============================
@@ -163,6 +368,7 @@ static int CalcHash( unique_t id_shape )
 	return id_shape % LIGHTMAP_SHAPE_ID_HASH_SIZE;
 }
 
+#if 0
 static void InsertHash( db_lightmap_t *db, lightmap_t *lmap )
 {
 	int	entry;
@@ -172,15 +378,24 @@ static void InsertHash( db_lightmap_t *db, lightmap_t *lmap )
 	lmap->hash_link = db->lightmap_hash[entry];
 	db->lightmap_hash[entry] = lmap;	
 }
+#endif
 
-
-
+void lightmap_db_cpp::insert_hash( lightmap_t *lmap )
+{
+    int entry;
+    
+    entry = CalcHash( lmap->id_shape );
+    
+    lmap->hash_link = lightmap_hash[entry];
+    lightmap_hash[entry] = lmap;    
+}
 /*
   ==============================
   LightmapDB_Load
 
   ==============================
 */
+#if 0
 void LightmapDB_Load( db_lightmap_t *db, char *lightmap_bin_name, char *lightmap_class_name, char *source_class_name )
 {
 	int		i;
@@ -321,12 +536,153 @@ void LightmapDB_Load( db_lightmap_t *db, char *lightmap_bin_name, char *lightmap
 	DeepDestroyClass( lightsource_root );
 }
 
+void lightmap_db_cpp::load ( const char* lightmap_bin_name, const char* lightmap_class_name, const char* source_class_name )
+{
+    int     i;
+
+    hobj_t      *lightmap_root;
+    hobj_t      *lightsource_root;
+    unsigned char   *lightmap_bin;
+    ib_file_t       *h;
+    int         filesize;
+    hobj_search_iterator_t  iter;
+    hobj_t          *lightmap;
+    hobj_t          *lightsource;
+    tokenstream_t   *ts;
+
+    u_list_iter_t       lsrc_iter;
+
+    lightmap_t      *lmap;
+    lightsource_t       *lsrc;
+
+    //
+    // load lightmap binary
+    //
+
+    h = IB_Open( lightmap_bin_name );
+    if ( !h )
+    {
+        __error( "can't open lightmap binary\n" );
+    }
+    
+    filesize = IB_GetSize( h );
+    lightmap_bin = (unsigned char *)NEWBYTES( filesize );
+    __chkptr( lightmap_bin );
+
+    IB_Read( lightmap_bin, filesize, 1, h );
+    IB_Close( h );
+
+    lightmap_bin = lightmap_bin;
+
+
+    //
+    // load lightmap class
+    //
+
+    ts = BeginTokenStream( lightmap_class_name );
+    if ( !ts )
+    {
+        __error( "can't open lightmap class\n" );
+    }
+    
+    lightmap_root = ReadClass( ts );
+    if ( !lightmap_root )
+    {
+        __error( "can't load lightmap class\n" );
+    }
+    EndTokenStream( ts );
+
+    InitClassSearchIterator( &iter, lightmap_root, "*" );
+    for ( ; ( lightmap = SearchGetNextClass( &iter ) ) ; )
+    {
+        int     ofs;
+
+        lmap = NEWTYPE( lightmap_t );
+        
+        EasyFindClsrefAsUnique( &lmap->id_shape, lightmap, "shape_id" );
+        EasyFindClsrefAsUnique( &lmap->id_source, lightmap, "source_id" );
+        EasyFindInt( &lmap->type, lightmap, "type" );
+        EasyFindInt( &ofs, lightmap, "ofs" );
+        
+        lmap->pixel_ptr = &lightmap_bin[ofs];
+        
+        insert_hash( lmap );
+    }
+
+    //
+    // load lightsource class
+    //
+
+    ts = BeginTokenStream( source_class_name );
+    if ( !ts )
+    {
+        __error( "can't open lightsource class\n" );
+    }
+
+    lightsource_root = ReadClass( ts );
+    if ( !lightsource_root )
+    {
+        __error( "can't load lightsource class\n" );
+    }
+    EndTokenStream( ts );
+    
+    InitClassSearchIterator( &iter, lightsource_root, "*" );
+    for ( ; ( lightsource = SearchGetNextClass( &iter ) ) ; )
+    {
+        lsrc = NEWTYPE( lightsource_t );
+
+        lsrc->id_source = StringToUnique( lightsource->name );
+        EasyFindClsrefAsUnique( &lsrc->id_any_light, lightsource, "any_light" );
+        EasyFindVec3d( lsrc->color, lightsource, "color" );
+
+        U_ListInsertAtHead( &lightsource_list, lsrc );
+    }
+
+    //
+    // link lightsources and lightmaps
+    //
+
+    // for each id_source
+    //  link all lightmaps with same id_source
+    //  set list head
+
+    U_ListIterInit( &lsrc_iter, &lightsource_list );
+    for ( ; ( lsrc = (lightsource_t *)U_ListIterNext( &lsrc_iter ) ) ; ) 
+    {
+        lsrc->head = NULL;
+
+        for ( i = 0; i < LIGHTMAP_SHAPE_ID_HASH_SIZE; i++ )
+        {
+            for ( lmap = lightmap_hash[i]; lmap; lmap=lmap->hash_link )
+            {
+                if ( lmap->id_source != lsrc->id_source )
+                {
+                    continue;
+                }
+                
+                lmap->source_ref = lsrc;
+                
+                lmap->source_link = lsrc->head;
+                lsrc->head = lmap;
+            }
+        }
+    }
+
+    //
+    // destroy classes
+    //
+    
+    DeepDestroyClass( lightmap_root );
+    DeepDestroyClass( lightsource_root );
+}
+#endif
 
 /*
   ==============================
 
   ==============================
 */
+#if 0
 lightsource_t * LightmapDB_SelectLightsourceWhereAnyLightID( db_lightmap_t *db, unique_t id_any_light )
 {
 	u_list_iter_t	iter;
@@ -343,12 +699,32 @@ lightsource_t * LightmapDB_SelectLightsourceWhereAnyLightID( db_lightmap_t *db, 
 
 	return NULL;
 }
+#endif
+
+lightsource_t * lightmap_db_cpp::SelectLightsourceWhereAnyLightID( unique_t id_any_light )
+{
+    u_list_iter_t   iter;
+    lightsource_t   *lsrc;
+
+    U_ListIterInit( &iter, &lightsource_list );
+    for ( ; ( lsrc = (lightsource_t *)U_ListIterNext( &iter ) ) ; )
+    {
+        if ( lsrc->id_any_light == id_any_light )
+        {
+            return lsrc;
+        }
+    }
+
+    return NULL;
+}
+
 
 /*
   ==============================  
 
   ==============================
 */
+#if 0
 void LightmapDB_SelectLightmapsWhereShapeID( db_lightmap_t *db, unique_t id_shape, void (*select_func)(lightmap_t *lmap) )
 {
 	lightmap_t	*lmap;
@@ -365,7 +741,24 @@ void LightmapDB_SelectLightmapsWhereShapeID( db_lightmap_t *db, unique_t id_shap
 		}	
 	}
 }
+#endif
 
+void lightmap_db_cpp::SelectLightmapsWhereShapeID( unique_t id_shape, void (*select_func)(lightmap_t *lmap) )
+{
+    lightmap_t  *lmap;
+
+    int     entry;
+
+    entry = CalcHash( id_shape );
+
+    for ( lmap = lightmap_hash[entry]; lmap ; lmap=lmap->hash_link )
+    {
+        if ( lmap->id_shape == id_shape )
+        {
+            select_func( lmap );
+        }   
+    }
+}
 
 
 /*
@@ -667,6 +1060,7 @@ char * LightmapDB_CombineLightmaps( lightmap_t *head, int num_pixel )
 	return (char *)pixels;
 }
 
+#if 0
 char * LightmapDB_GetPixels( db_lightmap_t *db, lightmap_t *head, int num_pixel )
 {	
 	lightmap_t	*lmap;
@@ -751,5 +1145,92 @@ char * LightmapDB_GetPixels( db_lightmap_t *db, lightmap_t *head, int num_pixel 
 
 //	pixels = LightmapDB_CombineLightmaps( head, num_pixel );
 	return (char *)pixels;	
+}
+#endif
+
+char * lightmap_db_cpp::GetPixels( lightmap_t *head, int num_pixel )
+{   
+    lightmap_t  *lmap;
+
+    gen_info_digest_t   gen_digest;
+    info_digest_t   digest;
+
+    void    *pixels;
+
+    static int print_next = 0;
+
+    __chkptr( head );
+
+
+//  pixels = LightmapDB_CombineLightmaps( head, num_pixel );
+//  return pixels;  
+
+    //
+    // generate digest from current lightmap combine list
+    //
+
+    InfoDigest_Begin( &gen_digest );
+    for ( lmap = head; lmap ; lmap=lmap->combine_link )
+    {
+        InfoDigest_Advance( &gen_digest, 4, &lmap );
+        InfoDigest_Advance( &gen_digest, 4, &lmap->id_shape );
+        InfoDigest_Advance( &gen_digest, 4, &lmap->id_source );
+        InfoDigest_Advance( &gen_digest, 12, lmap->source_ref->color );
+    }
+
+    digest = InfoDigest_End( &gen_digest );
+
+#if 0   
+    // cat x | grep "digest" | sort | uniq | less
+    printf( "digest: %u ", digest );
+    for ( i = 0; i < gen_digest.num; i++ )
+        printf( "%x ", dbg_digest[i] );
+    printf( "\n" );
+#endif  
+
+    if ( X_CacheTestRealAddr( &cache, digest ) )
+    {
+        // pixels are in cache
+        pixels = X_CacheGetData( &cache, digest );      
+    }
+    else
+    {
+        // pixels not in cache, create them and insert into cache
+        pixels = LightmapDB_CombineLightmaps( head, num_pixel );
+
+        X_CacheInsertData( &cache, digest, pixels, num_pixel*4 );
+    }
+
+    if ( print_next == 0 )
+    {       
+        fp_t    rate;
+
+        if ( x_num_hit == 0 )
+        {
+            rate = 0.0;
+        }
+        else
+        {
+            rate = 100.0-((x_num_flush*100.0)/(x_num_hit*1.0));
+        }
+
+        db_hitrate = rate;
+        db_datamem = cache.data_mem;
+
+//      printf( "%d cache hits, %d cache miss, %d cache flush, current hit rate %.2f%%\n", x_num_hit, x_num_miss, x_num_flush, rate );
+//      printf( " ================================= %.2f KB in cache ==================\n", db->cache.data_mem/1024.0 );
+           
+        print_next = 1024;
+        x_num_hit = 0;
+        x_num_miss = 0;
+        x_num_flush = 0;
+    }
+    else
+    {
+        print_next--;
+    }
+
+//  pixels = LightmapDB_CombineLightmaps( head, num_pixel );
+    return (char *)pixels;  
 }
 

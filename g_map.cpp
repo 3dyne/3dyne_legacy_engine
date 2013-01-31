@@ -360,13 +360,25 @@ void G_InitMap( g_map_t *map )
 	//
 
 	printf( "setup lightmap database\n" );
-	map->lightmap_db = NEWTYPE( db_lightmap_t );
+	
+#if 0
+    map->lightmap_db = NEWTYPE( db_lightmap_t );
 	LightmapDB_Init( map->lightmap_db );
 	sprintf( lightmap_bin, "%s/%s", path, MAP_BIN_NAME_LIGHTMAP );
 	sprintf( lightmap_class, "%s/%s", path, MAP_CLASS_NAME_LIGHTMAP );
-	sprintf( lightsource_class, "%s/%s", path, "_light_source.hobj" );
+	sprintf( lightsource_class, "%s/%s", path, "_light_source.class" );
 	LightmapDB_Load( map->lightmap_db, lightmap_bin, lightmap_class, lightsource_class  );
+#else
+    sprintf( lightmap_bin, "%s/%s", path, MAP_BIN_NAME_LIGHTMAP );
+    sprintf( lightmap_class, "%s/%s", path, MAP_CLASS_NAME_LIGHTMAP );
+    sprintf( lightsource_class, "%s/%s", path, "_light_source.hobj" );
 
+    map->lightmap_db = new lightmap_db_cpp(lightmap_bin, lightmap_class, lightsource_class);
+    
+    //LightmapDB_Load( map->lightmap_db, lightmap_bin, lightmap_class, lightsource_class  );
+//     map->lightmap_db->load( lightmap_bin, lightmap_class, lightsource_class );
+    
+#endif
 	//
 	// init shape database
 	//
@@ -446,9 +458,11 @@ void G_CleanUpMap( g_map_t *map )
 
 	// clean up lightmap db
 	SHV_Printf( " clean up lightmap database\n" );
-	LightmapDB_CleanUp( map->lightmap_db );
-	FREE( map->lightmap_db );
-
+	//LightmapDB_CleanUp( map->lightmap_db );
+	//FREE( map->lightmap_db );
+    delete map->lightmap_db;
+    
+    
 	// clean up shape db
 	SHV_Printf( " clean up shape database\n" );
 	ShapeDB_CleanUp( map->shape_db );
