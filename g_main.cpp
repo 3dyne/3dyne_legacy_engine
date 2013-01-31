@@ -204,10 +204,10 @@ void ShutDownBasic()
 	SND_ShutDown();
 
 	signal( SIGSEGV, SIG_DFL );
-        signal( SIGABRT, SIG_DFL );
-        signal( SIGTERM, SIG_DFL );
-        signal( SIGINT,  SIG_DFL );
-        signal( SIGFPE,  SIG_DFL );
+	signal( SIGABRT, SIG_DFL );
+	signal( SIGTERM, SIG_DFL );
+	signal( SIGINT,  SIG_DFL );
+	signal( SIGFPE,  SIG_DFL );
 
 
 	IB_ShutDown();
@@ -259,7 +259,7 @@ void SaveConfig()
 	fprintf( h, "let r_viewwidth\t%s\n", ( SHP_GetVar( "r_viewwidth" ))->string );
 	fprintf( h, "let r_viewheight\t%s\n",( SHP_GetVar( "r_viewheight" ))->string );
 	fprintf( h, "let r_gamma\t%s\n", ( SHP_GetVar( "r_gamma" ))->string );
-    fprintf( h, "let r_fullscreen\t%s\n", ( SHP_GetVar( "r_fullscreen" ))->string );
+	fprintf( h, "let r_fullscreen\t%d\n", ( SHP_GetVar( "r_fullscreen" ))->ivalue );
 	fprintf( h, "let gc_dumpudp\t%d\n", ( SHP_GetVar( "gc_dumpudp" ))->ivalue );
 
 	
@@ -481,6 +481,7 @@ int g_main( int argc, char* argv[] )
 	IB_Close( handle );
 
 
+	
 
 	// NOT!
 

@@ -114,7 +114,7 @@ hpair_t* NewHPair( void )
 //	pair->value = S_Malloc( HPAIR_VALUE_SIZE );
 //	memset( pair->value, 0, HPAIR_VALUE_SIZE );
 	pair->value = (char *)NEWBYTES( HPAIR_VALUE_SIZE );
-	__named_message( "pair->value: %p\n", pair->value );
+	
 	pair->next = NULL;
 	
 	return pair;
