@@ -30,6 +30,7 @@
 #include <stdexcept>
 
 namespace meh {
+#ifndef win32_x86
 class mapped_file {
 public:
     mapped_file( const char *filename, bool read_write )
@@ -37,10 +38,9 @@ public:
       read_write_(read_write)
     {
         int mode = O_RDONLY;
-        int prot = PROT_READ;
+        
         if( read_write ) {
             mode = O_RDWR;
-            prot = PROT_READ | PROT_WRITE;
         }
         
         fd_ = open( filename, mode );
@@ -95,8 +95,89 @@ private:
     off_t size_;
     bool read_write_;
 };
+#else
+#error untested Win32 implementation of mapped_file
+class mapped_file {
+public:
+    mapped_file( const char *filename, bool read_write )
+      : base_(0),
+      read_write_(read_write)
+    {
+        DWORD access = GENERIC_READ;
+        DWORD share = FILE_SHARE_READ;
+	DWORD create = OPEN_EXISTING;
+	DWORD prot = PAGE_READONLY;
+        if( read_write ) {
+            mode |= GENERIC_WRITE;
+            prot |= FILE_SHARE_WRITE;
+	    create = CREATE_ALWAYS;
+            prot = PAGE_READWRITE;
+        }
+        
+        fd_ = CreateFile (filename, access, share, NULL, create, FILE_ATTRIBUTE_NORMAL, NULL);
+        assert( fd_ != (HANDLE)INVALID_HANDLE_VALUE );
+
+        DWORD size_low_ = GetFileSize( fd_, &size_high_ );
+	mapping_ = CreateFileMapping (fd_, NULL, prot, size_high_, size_low_, NULL);
+        assert( mapping_ != 0 );
+
+        map();
+    }
     
+    size_t size() const {
+	// TODO: check bit fiddling (is a left shift up or down...)
+	
+        size_t size = size_high;
+	size <<= 32;
+	size |= size_low;
+	
+	return size;
+    }
     
+    void unmap() {
+        assert( base_ != 0 );
+        UnmapViewOfFile( base_ );
+	base_ = 0;
+    }
+    void map() {
+        assert( base_ == 0 );
+	DWORD access = FILE_MAP_READ;
+        if( read_write_ ) {
+	    access |= FILE_MAP_WRITE;
+        }
+        
+	base_ = MapViewOfFile ( mapping_, access, 0, 0, 0);
+	
+        assert( base_ != 0 );
+        
+    }
+    
+    ~mapped_file() {
+        if( base_ != 0 ) {
+            unmap();
+        }
+        CloseHandle( mapping_ );
+        CloseHandle( fd_ );
+    }
+    
+    void *base() {
+        return base_;
+    }
+ 
+
+private:
+    void *base_;
+//     bool read_write_;
+    HANDLE fd_;
+    HANDLE mapping_;
+    DWORD size_low_;
+    DWORD size_high_;
+    bool read_write_;
+};
+
+#endif
+
+
 template<typename K>
 uint64_t hash_value( const K &k ) {
     return k.hash();
@@ -350,6 +431,83 @@ private:
     
     size_t table_size_;
     mapped_file mf_;
+};
+
+
+class hash_nonmapped {
+public:
+    typedef int64_t int_type;
+    const static size_t int_size = sizeof(int_type);
+    
+    // WARNING: the input stream is 'moved' to this object (i.e., currently unclean move semantics)
+    hash_nonmapped( std::ifstream &is ) {
+        assert( is_.good() );
+        off_t size = is.seekg( 0, std::ios::end ).tellg();
+        is.seekg( size - int_size );
+        assert( !is.fail() );
+        is.read( (char*)&table_size_, int_size );
+        
+        std::cout << "table size: " << table_size_ << "\n";
+    }
+    
+    size_t find( const char *filename, std::ifstream &is ) const {
+        size_t name_hash = hash_value( filename );
+        size_t bucket = name_hash % table_size_;
+        
+        // start offset of hash chain
+        is.seekg( bucket * int_size );
+        
+        int_type offset;
+        is.read( (char*) &offset, int_size );
+        assert( !is.fail() );
+        
+        
+        size_t chain_len = 0;
+        
+        // traverse current hash chain
+        std::string read_name;
+        
+        
+        while( offset != 0 ) {
+            is.seekg( offset, std::ios::beg );
+            assert( !is.fail() );
+            
+            
+            is.read( (char*) &offset, int_size );
+            assert( !is.fail() );
+            
+            //offset += int_size;
+
+            std::getline( is, read_name, '\0' );
+            assert( !is.fail() );
+            
+            if( false ) {
+                std::cout << "offset: " << std::ios::hex << offset << " " << read_name << std::endl;
+            }
+            
+            if( read_name == filename ) {
+                
+                
+                int_type size;
+                is.read( (char*)&size, int_size );
+                
+                off_t cur_offs = is.tellg();
+                off_t align_offs = align( cur_offs );
+                if( cur_offs != align_offs ) {
+                    is.seekg( align_offs );
+                    assert( !is.fail() );
+                }
+                
+                return size;
+            }
+            ++chain_len;
+        }
+        
+        // fell through: name not found
+        return size_t(-1);
+    }
+private:
+    int_type table_size_;
 };
 
 
