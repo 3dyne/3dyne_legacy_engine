@@ -78,7 +78,6 @@ include_directories( shared . r_fake r_gen_gl)
 
 
 set( ENGINE_SRC g_main.cpp
-        baked_hobj.cpp
 	la_service.cpp
 	la_varviews.cpp
 	g_resources.cpp

@@ -206,8 +206,6 @@ lightmap_db_cpp::lightmap_db_cpp( const char* lightmap_bin_name, const char* lig
     EndTokenStream( ts );
 
     
-    bake_hobj( lightmap_root );
-    
     InitClassSearchIterator( &iter, lightmap_root, "*" );
     for ( ; ( lightmap = SearchGetNextClass( &iter ) ) ; )
     {
