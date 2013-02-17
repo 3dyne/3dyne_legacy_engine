@@ -1,3 +1,3 @@
 [submodule "3dyne_extlibs"]
 	path = 3dyne_extlibs
-	url = git@github.com:sim82/3dyne_extlibs.git
+	url = git@github.com:3dyne/3dyne_extlibs.git
