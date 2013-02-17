@@ -439,9 +439,9 @@ public:
     typedef int64_t int_type;
     const static size_t int_size = sizeof(int_type);
     
-    // WARNING: the input stream is 'moved' to this object (i.e., currently unclean move semantics)
+    
     hash_nonmapped( std::ifstream &is ) {
-        assert( is_.good() );
+        assert( is.good() );
         off_t size = is.seekg( 0, std::ios::end ).tellg();
         is.seekg( size - int_size );
         assert( !is.fail() );

@@ -281,7 +281,7 @@ namespace impl_meh_nonmapped {
         file( const meh::hash_nonmapped &hash, const char *meh_name, const char *entry_name ) 
         : is_(meh_name)
         {
-            assert( is.good() );
+            assert( is_.good() );
             
 //             __named_message( "try open: %s\n", entry_name );
             size_ = hash.find( entry_name, is_ );
